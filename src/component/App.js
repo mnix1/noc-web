@@ -8,7 +8,7 @@ export default class App extends React.Component {
     render() {
         return (
             <div className="App">
-                <QueryRenderer
+                   <QueryRenderer
                     environment={environment}
                     query={graphql`
                         query AppProfileQuery($profileId: Long!) {

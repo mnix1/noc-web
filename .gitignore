@@ -19,3 +19,15 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+**/__generated__/
+
+# --------------------
+# IntelliJ Files
+# --------------------
+*.iml
+*.ipr
+*.iws
+/out/
+.idea/
+.idea_modules/

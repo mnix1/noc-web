@@ -7,18 +7,29 @@
     "react-dom": "^16.2.0",
     "react-relay": "^1.5.0",
     "react-scripts": "1.1.1",
-    "relay-runtime": "^1.5.0"
+    "relay-runtime": "^1.5.0",
+    "lodash": "^4.17.5"
   },
   "devDependencies": {
-    "relay-compiler": "^1.5.0",
-    "babel-plugin-relay": "^1.5.0"
+    "babel-plugin-relay": "^1.5.0",
+    "eslint": "^4.19.1",
+    "relay-compiler": "^1.5.0"
   },
   "scripts": {
+    "precommit": "lint-staged",
+    "lint": "eslint src",
+    "clean": "rm -rf build && mkdir build",
+    "get-schema": "node scripts/getSchema.js",
+    "relay": "relay-compiler --src ./src --schema schema.graphql",
     "start": "node ./setup && react-scripts start",
     "build": "node ./setup && react-scripts build",
     "test": "node ./setup && react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "relay": "relay-compiler --src ./src --schema schema.graphql",
-    "get-schema": "node scripts/getSchema.js"
+    "eject": "react-scripts eject"
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,json,css}": [
+      "prettier --single-quote --write",
+      "git add"
+    ]
   }
 }
