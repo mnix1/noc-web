@@ -1,8 +1,8 @@
 import React from 'react';
 import './App.css';
 import { QueryRenderer, graphql } from 'react-relay/compat';
-import Profile from './Profile';
 import environment from '../createRelayEnvironment';
+import Profile from './Profile';
 
 export default class App extends React.Component {
   render() {
