@@ -1,0 +1,24 @@
+{
+  "name": "noc-web",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-relay": "^1.5.0",
+    "react-scripts": "1.1.1",
+    "relay-runtime": "^1.5.0"
+  },
+  "devDependencies": {
+    "relay-compiler": "^1.5.0",
+    "babel-plugin-relay": "^1.5.0"
+  },
+  "scripts": {
+    "start": "node ./setup && react-scripts start",
+    "build": "node ./setup && react-scripts build",
+    "test": "node ./setup && react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "relay": "relay-compiler --src ./src --schema schema.graphql",
+    "get-schema": "node scripts/getSchema.js"
+  }
+}

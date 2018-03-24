@@ -1,0 +1,76 @@
+type Card {
+  id: ID!
+  name: String!
+  type: Type!
+  rarity: Rarity!
+  statistics: [CardStatistic!]!
+}
+
+type CardStatistic {
+  id: ID!
+  card: Card!
+  statistic: Statistic!
+  value: String
+}
+
+"""Long type"""
+scalar Long
+
+type Mutation {
+  createProfile(name: String!): Profile!
+  updateName(id: Long!, name: String!): Profile!
+}
+
+type Profile {
+  id: ID!
+  tag: String!
+  name: String!
+  level: Int!
+  experience: Int!
+  gold: Int!
+  diamond: Int!
+  cards: [ProfileCard]!
+}
+
+type ProfileCard {
+  id: ID!
+  profile: Profile!
+  card: Card!
+  quantity: Int!
+}
+
+type Query {
+  profiles: [Profile]!
+  profile(id: Long!): Profile!
+  cards: [Card]!
+  card(name: String!): Card!
+  profileCards: [ProfileCard]!
+  cardStatistics: [CardStatistic]!
+}
+
+enum Rarity {
+  COMMON
+  RARE
+  EPIC
+  LEGENDARY
+  FORGOTTEN
+}
+
+enum Statistic {
+  ELIXIR_MAX
+  ELIXIR_REGENERATION
+  HEALTH_MAX
+  HEALTH_REGENERATION
+  ABILITY_MAX
+  ABILITY_REGENERATION
+  MANA_MAX
+  MANA_REGENERATION
+}
+
+enum Type {
+  CHARACTER
+  ANIMAL
+  PLANT
+  CONSTRUCTION
+  SPELL
+}
