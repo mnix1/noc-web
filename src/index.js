@@ -1,16 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import _ from 'lodash';
 import './index.css';
-import App from './component/App';
+import App from './component/app/App';
 import Login from "./component/auth/Login";
 
-fetch('/user', {credentials: 'include'})
+fetch('/profile', {credentials: 'include'})
     .then(res => res.json())
     .then(json => {
-        if(json.user === null){
-            return  ReactDOM.render(<Login/>, document.getElementById('root'));
+        const profileId = json.profileId;
+        if (_.isNil(profileId)) {
+            return ReactDOM.render(<Login/>, document.getElementById('root'));
         }
-        ReactDOM.render(<App user={json}/>, document.getElementById('root'));
+        ReactDOM.render(<App profileId={profileId}/>, document.getElementById('root'));
     })
     .catch(e => {
         console.log(e);

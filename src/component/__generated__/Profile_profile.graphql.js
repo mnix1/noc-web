@@ -13,7 +13,7 @@ declare export opaque type Profile_profile$ref: FragmentReference;
 export type Profile_profile = {|
   +id: string,
   +tag: string,
-  +name: string,
+  +name: ?string,
   +$refType: Profile_profile$ref,
 |};
 */

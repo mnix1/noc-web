@@ -1,13 +1,14 @@
 import React from 'react';
 import './App.css';
 import {graphql, QueryRenderer} from 'react-relay/compat';
-import environment from '../createRelayEnvironment';
-import Profile from './Profile';
-import Logout from "./auth/Logout";
+import environment from '../../createRelayEnvironment';
+import Profile from '../Profile';
+import Logout from "../auth/Logout";
 
 export default class App extends React.Component {
 
     renderQuery(){
+        console.log(this.props.profileId);
         return <QueryRenderer
             environment={environment}
             query={graphql`
@@ -18,7 +19,7 @@ export default class App extends React.Component {
                 }
             `}
             variables={{
-                profileId: 7
+                profileId: this.props.profileId
             }}
             render={({error, props}) => {
                 if (error) {
