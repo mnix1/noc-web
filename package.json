@@ -5,6 +5,9 @@
   "dependencies": {
     "base-64": "^0.1.0",
     "lodash": "^4.17.5",
+    "lost": "^8.2.1",
+    "postcss": "^6.0.21",
+    "postcss-cssnext": "^3.1.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-relay": "^1.5.0",
@@ -21,8 +24,8 @@
     "clean": "rm -rf build && mkdir build",
     "get-schema": "node scripts/getSchema.js",
     "relay": "relay-compiler --src ./src --schema schema.graphql",
-    "start": "node ./setup && react-scripts start",
-    "build": "node ./setup && react-scripts build",
+    "start": "node ./scripts/setup && react-scripts start",
+    "build": "node ./scripts/setup && react-scripts build",
     "test": "node ./setup && react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },

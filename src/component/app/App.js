@@ -1,4 +1,4 @@
-import './app.css';
+import styles from './app.css';
 import React from 'react';
 import {graphql, QueryRenderer} from 'react-relay/compat';
 import environment from '../../createRelayEnvironment';
@@ -34,7 +34,8 @@ export default class App extends React.Component {
 
     render() {
         return (
-            <div className="App">
+            <div className={styles.app}>
+                <i className="material-icons">face</i>
                 {this.renderQuery()}
                 <Logout/>
             </div>
