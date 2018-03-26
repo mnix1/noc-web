@@ -13,6 +13,21 @@ type CardStatistic {
   value: String
 }
 
+type Deck {
+  id: ID!
+  name: String
+  position: Int!
+  profile: Profile!
+  cards: [DeckCard!]!
+}
+
+type DeckCard {
+  id: ID!
+  position: Int!
+  deck: Deck!
+  card: Card!
+}
+
 """Long type"""
 scalar Long
 
@@ -28,22 +43,26 @@ type Profile {
   experience: Int!
   gold: Int!
   diamond: Int!
-  cards: [ProfileCard]!
+  cards: [ProfileCard!]!
+  decks: [Deck!]!
 }
 
 type ProfileCard {
   id: ID!
+  quantity: Int!
   profile: Profile!
   card: Card!
-  quantity: Int!
 }
 
 type Query {
   profiles: [Profile]!
   profile(id: Long!): Profile!
   cards: [Card]!
+
+  """
   card(name: String!): Card!
   profileCards: [ProfileCard]!
+  """
   cardStatistics: [CardStatistic]!
 }
 
