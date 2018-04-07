@@ -1,24 +1,26 @@
-export const NEW_PROFILES = 'profile/new-many';
-export const UPDATE_PROFILE = 'profile/update';
+export const RESIZE = 'screen/resize';
 
 const initialState = {
+    leftMenuWidth: 300,
+    topMenuHeight: 40,
+    height: window.innerHeight,
+    width: window.innerWidth,
 };
 
-function reducer(state = initialState, action) {
+export default function reducer(state = initialState, action) {
     switch (action.type) {
-        case NEW_PROFILES:
+        case RESIZE:
             return {
-            };
-        case UPDATE_PROFILE:
-            return {
+                ...state,
+                height: action.height,
+                width: action.width
             };
         default:
             return state
     }
 }
 
-// export const newProfiles = (profiles) => {
-//     return {type: NEW_PROFILES, profiles}
-// };
+export function screenResized(height, width) {
+    return {type: RESIZE, height, width};
+}
 
-export default reducer;

@@ -1,12 +1,12 @@
-import {LEFT_MENU_ITEMS} from "../../component/layout/leftMenu/leftMenuConfig";
+import {PAGES} from "../../component/layout/config";
 
 export const PAGE_CHANGED = 'page/changed';
 
 const initialState = {
-    page: LEFT_MENU_ITEMS[0].id
+    page: PAGES[0].id
 };
 
-function reducer(state = initialState, action) {
+export default function reducer(state = initialState, action) {
     switch (action.type) {
         case PAGE_CHANGED:
             return {
@@ -21,5 +21,3 @@ function reducer(state = initialState, action) {
 export const pageChanged = (page) => {
     return {type: PAGE_CHANGED, page}
 };
-
-export default reducer;

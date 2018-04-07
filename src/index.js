@@ -7,8 +7,13 @@ import Login from "./component/auth/Login";
 import {Provider} from 'react-redux'
 import {createStore} from 'redux'
 import app from './redux/app';
+import {screenResized} from "./redux/reducer/screen";
 
 const store = createStore(app);
+
+window.addEventListener('resize', () => {
+    store.dispatch(screenResized(window.innerHeight, window.innerWidth));
+});
 
 fetch('/profile', {credentials: 'include'})
     .then(res => res.json())

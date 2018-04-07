@@ -4,7 +4,8 @@ import {pageChanged} from "../../../redux/reducer/page";
 
 const mapStateToProps = (state) => {
     return {
-        page: state.page.page
+        page: state.page.page,
+        width: state.screen.leftMenuWidth
     }
 };
 

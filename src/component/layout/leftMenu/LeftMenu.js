@@ -1,7 +1,7 @@
 import styles from './style.css';
 import React from 'react';
 import logo from '../../../logo2.png';
-import {LEFT_MENU_ITEMS} from "./leftMenuConfig";
+import {PAGES} from "../config";
 import cn from 'classnames';
 
 export default class LeftMenu extends React.Component {
@@ -25,7 +25,7 @@ export default class LeftMenu extends React.Component {
             <div className={styles.container} style={this.containerStyle}>
                 <div><img src={logo} width={this.props.width}/></div>
                 <ul>
-                    {LEFT_MENU_ITEMS.map(this.renderItem)}
+                    {PAGES.map(this.renderItem)}
                 </ul>
             </div>
         );
