@@ -4,6 +4,11 @@ import _ from 'lodash';
 import './index.css';
 import App from './component/app/App';
 import Login from "./component/auth/Login";
+import {Provider} from 'react-redux'
+import {createStore} from 'redux'
+import app from './redux/app';
+
+const store = createStore(app);
 
 fetch('/profile', {credentials: 'include'})
     .then(res => res.json())
@@ -12,7 +17,9 @@ fetch('/profile', {credentials: 'include'})
         if (_.isNil(profileId)) {
             return ReactDOM.render(<Login/>, document.getElementById('root'));
         }
-        ReactDOM.render(<App profileId={profileId}/>, document.getElementById('root'));
+        ReactDOM.render(<Provider store={store}>
+            <App profileId={profileId}/>
+        </Provider>, document.getElementById('root'));
     })
     .catch(e => {
         console.log(e);

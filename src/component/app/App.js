@@ -1,9 +1,8 @@
-import styles from './app.css';
 import React from 'react';
 import {graphql, QueryRenderer} from 'react-relay/compat';
 import environment from '../../createRelayEnvironment';
 import Logout from "../auth/Logout";
-import ProfileContainer from "../profile/ProfileContainer";
+import Layout from "../layout/Layout";
 
 export default class App extends React.Component {
 
@@ -25,7 +24,7 @@ export default class App extends React.Component {
                     return <div>{error.message}</div>;
                 } else if (props) {
                     console.log(props.profile);
-                    return <ProfileContainer profile={props.profile}/>;
+                    return <Layout profile={props.profile}/>;
                 }
                 return <div>Loading</div>;
             }}
@@ -34,8 +33,7 @@ export default class App extends React.Component {
 
     render() {
         return (
-            <div className={styles.app}>
-                <i className="material-icons">face</i>
+            <div>
                 {this.renderQuery()}
                 <Logout/>
             </div>

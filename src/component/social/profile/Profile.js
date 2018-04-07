@@ -1,3 +1,4 @@
+import styles from './style.css';
 import React from 'react';
 import {commit} from './UpdateProfileNameMutation';
 
@@ -10,22 +11,27 @@ export default class Profile extends React.Component {
 
     handleProfileNameChange = (e) => {
         this.setState({profileName: e.target.value});
-    }
+    };
 
     updateProfileName = () => {
-        commit(this.props.relay.environment, this.props.profile.id, this.state.profileName);
-    }
+        commit(this.props.relay.environment, this.state.profileName);
+    };
 
     render() {
         return (
-            <div>
-                <input type="text" value={this.state.profileName} onChange={this.handleProfileNameChange}/>
+            <div className={styles.profile}>
+                Id:
                 {this.props.profile.id}
                 <br/>
+                Tag:
                 {this.props.profile.tag}
                 <br/>
-                {this.props.profile.name}
-                <button onClick={this.updateProfileName}>Update name</button>
+                <div>
+                    Name:
+                    {this.props.profile.name}
+                    <input type="text" value={this.state.profileName} onChange={this.handleProfileNameChange}/>
+                    <button onClick={this.updateProfileName}>Update name</button>
+                </div>
             </div>
         );
     }

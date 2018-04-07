@@ -1,16 +1,62 @@
+enum BattleResult {
+  BATTLE_SIDE_0_WON
+  BATTLE_SIDE_1_WON
+  DRAW
+  EMPTY
+}
+
+enum BattleSide {
+  BATTLE_SIDE_0
+  BATTLE_SIDE_1
+}
+
+enum BattleStatus {
+  SEARCHING_OPPONENT
+  PREPARING
+  IN_PROGRESS
+  FINISHED
+}
+
 type Card {
   id: ID!
   name: String!
-  type: Type!
-  rarity: Rarity!
+  type: CardType!
+  rarity: CardRarity!
   statistics: [CardStatistic!]!
+}
+
+enum CardProperty {
+  ELIXIR_MAX
+  ELIXIR_REGENERATION
+  HEALTH_MAX
+  HEALTH_REGENERATION
+  ABILITY_MAX
+  ABILITY_REGENERATION
+  MANA_MAX
+  MANA_REGENERATION
+}
+
+enum CardRarity {
+  COMMON
+  RARE
+  EPIC
+  LEGENDARY
+  FORGOTTEN
 }
 
 type CardStatistic {
   id: ID!
-  card: Card!
-  statistic: Statistic!
+  property: CardProperty!
   value: String
+  card: Card!
+}
+
+enum CardType {
+  CHARACTER
+  ANIMAL
+  PLANT
+  CONSTRUCTION
+  SPELL
 }
 
 type Deck {
@@ -28,11 +74,21 @@ type DeckCard {
   card: Card!
 }
 
+type Ladder1Vs1Battle {
+  id: ID!
+  status: BattleStatus!
+  result: BattleResult
+  profiles: [ProfileLadder1Vs1Battle!]!
+}
+
 """Long type"""
 scalar Long
 
 type Mutation {
-  updateProfileName(id: Long!, name: String!): Profile!
+  createTeam(name: String!): Team!
+  updateProfileName(name: String!): Profile!
+  prepareLadder1Vs1Battle: Ladder1Vs1Battle!
+  cancelLadder1Vs1Battle: Ladder1Vs1Battle
 }
 
 type Profile {
@@ -43,8 +99,11 @@ type Profile {
   experience: Int!
   gold: Int!
   diamond: Int!
+  ladder1Vs1BattleElo: Int!
+  teams: [TeamProfile!]!
   cards: [ProfileCard!]!
   decks: [Deck!]!
+  ladder1Vs1Battles: [ProfileLadder1Vs1Battle!]!
 }
 
 type ProfileCard {
@@ -54,41 +113,31 @@ type ProfileCard {
   card: Card!
 }
 
+type ProfileLadder1Vs1Battle {
+  id: ID!
+  side: BattleSide!
+  profile: Profile!
+  ladder1Vs1Battle: Ladder1Vs1Battle!
+}
+
 type Query {
+  teams: [Team]!
   profiles: [Profile]!
   profile(id: Long!): Profile!
   cards: [Card]!
-
-  """
-  card(name: String!): Card!
-  profileCards: [ProfileCard]!
-  """
-  cardStatistics: [CardStatistic]!
 }
 
-enum Rarity {
-  COMMON
-  RARE
-  EPIC
-  LEGENDARY
-  FORGOTTEN
+type Team {
+  id: ID!
+  tag: String!
+  name: String
+  profiles: [TeamProfile!]!
 }
 
-enum Statistic {
-  ELIXIR_MAX
-  ELIXIR_REGENERATION
-  HEALTH_MAX
-  HEALTH_REGENERATION
-  ABILITY_MAX
-  ABILITY_REGENERATION
-  MANA_MAX
-  MANA_REGENERATION
-}
-
-enum Type {
-  CHARACTER
-  ANIMAL
-  PLANT
-  CONSTRUCTION
-  SPELL
+type TeamProfile {
+  id: ID!
+  isLeader: Boolean!
+  isCoLeader: Boolean!
+  team: Team!
+  profile: Profile!
 }

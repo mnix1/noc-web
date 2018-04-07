@@ -15,7 +15,15 @@ if (!text.includes('babel-plugin-relay')) {
         throw new Error(`Failed to inject babel-plugin-relay.`);
     }
 }
-
+const autoprefixer = 'autoprefixer({\n' +
+    '                      browsers: [\n' +
+    '                        \'>1%\',\n' +
+    '                        \'last 4 versions\',\n' +
+    '                        \'Firefox ESR\',\n' +
+    '                        \'not ie < 9\', // React doesn\'t support IE8 anyway\n' +
+    '                      ],\n' +
+    '                      flexbox: \'no-2009\',\n' +
+    '                    }),';
 function addPostCssPlugins(file){
     text = fs.readFileSync(file, 'utf8');
     if (!text.includes("require('lost'),")) {
@@ -28,6 +36,10 @@ function addPostCssPlugins(file){
         } else {
             throw new Error(`Failed to inject babel-plugin-relay.`);
         }
+    }
+    if(text.includes(autoprefixer)){
+        text = text.replace(autoprefixer, '');
+        fs.writeFileSync(file, text, 'utf8');
     }
 }
 addPostCssPlugins(path.resolve('./node_modules/react-scripts/config/webpack.config.dev.js'));
