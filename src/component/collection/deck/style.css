@@ -1,0 +1,8 @@
+:local .container {
+  width: 300px;
+  height: 300px;
+  box-shadow: 0 0 2px black;
+}
+:local .content {
+
+}

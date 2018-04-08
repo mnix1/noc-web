@@ -8,6 +8,9 @@ export default createFragmentContainer(
             id
             tag
             name
+            decks {
+                ...DeckPageContainer_decks
+            }
         }
     `
 );

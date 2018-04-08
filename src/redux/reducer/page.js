@@ -1,4 +1,4 @@
-import {PAGES} from "../../component/layout/config";
+import {PAGES} from "../../layout/config";
 
 export const PAGE_CHANGED = 'page/changed';
 

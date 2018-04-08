@@ -1,8 +1,7 @@
 import React from 'react';
 import {graphql, QueryRenderer} from 'react-relay/compat';
 import environment from '../../createRelayEnvironment';
-import Logout from "../auth/Logout";
-import Layout from "../layout/Layout";
+import Layout from "../../layout/Layout";
 
 export default class App extends React.Component {
 
@@ -14,6 +13,9 @@ export default class App extends React.Component {
                     profile(id: $profileId) {
                         ...ProfileContainer_profile
                     }
+                    cards {
+                        ...CardPageContainer_cards
+                    }
                 }
             `}
             variables={{
@@ -24,7 +26,7 @@ export default class App extends React.Component {
                     return <div>{error.message}</div>;
                 } else if (props) {
                     console.log(props.profile);
-                    return <Layout profile={props.profile}/>;
+                    return <Layout queryData={props}/>;
                 }
                 return <div>Loading</div>;
             }}

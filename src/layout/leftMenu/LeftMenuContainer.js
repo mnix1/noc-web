@@ -1,6 +1,6 @@
 import {connect} from 'react-redux'
 import LeftMenu from "./LeftMenu";
-import {pageChanged} from "../../../redux/reducer/page";
+import {pageChanged} from "../../redux/reducer/page";
 
 const mapStateToProps = (state) => {
     return {
