@@ -5,11 +5,10 @@ import Card from "../../../component/collection/card/Card";
 export default class CardPage extends React.Component {
 
     renderCard(card) {
-        return <Card {...card}/>;
+        return <Card key={card.id} {...card}/>;
     }
 
     render() {
-        console.log('cards', this.props);
         return (
             <div className={styles.container}>
                 {this.props.cards.map(e => this.renderCard(e))}

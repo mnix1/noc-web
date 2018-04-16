@@ -15,16 +15,17 @@ export default class Content extends React.Component {
     }
 
     get pageProps() {
-        const {screen, queryData} = this.props;
+        const {screen, cards, profile} = this.props;
         return {
-            queryData,
+            decks: profile.decks,
+            cards,
             width: screen.width - screen.leftMenuWidth,
             height: screen.height - screen.topMenuHeight,
         }
     }
 
     renderPage() {
-        console.log('this.pageProps', this.pageProps);
+        console.log('Content', this.pageProps);
         return React.createElement(getPageComponent(this.props.page), this.pageProps);
     }
 

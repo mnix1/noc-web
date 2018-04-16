@@ -12,7 +12,7 @@ export default class Layout extends React.Component {
             <div className={styles.container}>
                 <TopMenuContainer/>
                 <LeftMenuContainer/>
-                <ContentContainer queryData={this.props.queryData}/>
+                <ContentContainer {...this.props}/>
             </div>
         );
     }

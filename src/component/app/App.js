@@ -1,20 +1,23 @@
 import React from 'react';
 import {graphql, QueryRenderer} from 'react-relay/compat';
 import environment from '../../createRelayEnvironment';
-import Layout from "../../layout/Layout";
+import LayoutContainer from "../../layout/LayoutContainer";
 
 export default class App extends React.Component {
 
-    renderQuery(){
+    renderQuery() {
         return <QueryRenderer
             environment={environment}
             query={graphql`
-                query AppProfileQuery($profileId: Long!) {
+                query AppQuery($profileId: Long!) {
                     profile(id: $profileId) {
-                        ...ProfileContainer_profile
+                        ...LayoutContainer_profile
                     }
                     cards {
-                        ...CardPageContainer_cards
+                        id
+                        name
+                        type
+                        rarity
                     }
                 }
             `}
@@ -25,8 +28,8 @@ export default class App extends React.Component {
                 if (error) {
                     return <div>{error.message}</div>;
                 } else if (props) {
-                    console.log(props.profile);
-                    return <Layout queryData={props}/>;
+                    console.log('App', props);
+                    return <LayoutContainer {...props}/>;
                 }
                 return <div>Loading</div>;
             }}
