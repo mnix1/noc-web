@@ -34,6 +34,7 @@ enum CardProperty {
   ABILITY_REGENERATION
   MANA_MAX
   MANA_REGENERATION
+  DAMAGE
 }
 
 enum CardRarity {
@@ -52,6 +53,7 @@ type CardStatistic {
 }
 
 enum CardType {
+  CHAMPION
   CHARACTER
   ANIMAL
   PLANT
@@ -59,12 +61,66 @@ enum CardType {
   SPELL
 }
 
+type Champion {
+  id: ID!
+  firstName: String
+  nickName: String
+  lastName: String
+  kind: ChampionKind!
+  type: CardType!
+  rarity: CardRarity!
+  statistics: [ChampionStatistic!]!
+  cards: [ChampionCard!]!
+}
+
+type ChampionCard {
+  id: ID!
+  champion: Champion!
+  card: Card!
+}
+
+enum ChampionKind {
+  ALCHEMIST
+  ASSASSIN
+  ARCHER
+  AMAZON
+  BARD
+  BLACKSMITH
+  BUILDER
+  DRUID
+  ENGINEER
+  FARMER
+  HUNTER
+  KNIGHT
+  MONK
+  NECROMANCER
+  PALADIN
+  PRIEST
+  PROPHET
+  SHAMAN
+  SUMMONER
+  ROGUE
+  TRADER
+  WARLOCK
+  WARRIOR
+  WITCH
+  WIZARD
+}
+
+type ChampionStatistic {
+  id: ID!
+  property: CardProperty!
+  value: String
+  champion: Champion!
+}
+
 type Deck {
   id: ID!
   name: String
   position: Int!
   profile: Profile!
-  cards: [DeckCard!]!
+  champion: Champion
+  cards: [DeckCard!]
 }
 
 type DeckCard {
@@ -101,6 +157,7 @@ type Profile {
   diamond: Int!
   ladder1Vs1BattleElo: Int!
   teams: [TeamProfile!]!
+  champions: [ProfileChampion!]!
   cards: [ProfileCard!]!
   decks: [Deck!]!
   ladder1Vs1Battles: [ProfileLadder1Vs1Battle!]!
@@ -108,9 +165,18 @@ type Profile {
 
 type ProfileCard {
   id: ID!
+  level: Int!
   quantity: Int!
   profile: Profile!
   card: Card!
+}
+
+type ProfileChampion {
+  id: ID!
+  level: Int!
+  quantity: Int!
+  profile: Profile!
+  champion: Champion!
 }
 
 type ProfileLadder1Vs1Battle {
@@ -124,7 +190,8 @@ type Query {
   teams: [Team]!
   profiles: [Profile]!
   profile(id: Long!): Profile!
-  cards: [Card]!
+  cards: [Card!]!
+  champions: [Champion!]!
 }
 
 type Team {

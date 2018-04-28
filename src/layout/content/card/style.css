@@ -1,4 +1,11 @@
 :local .container {
+  background-color: inherit;
+}
+:local .champions {
+  background-color: #dadada;
+}
+:local .cards {
+  background-color: #fdfdfd;
 }
 :local .content {
 

@@ -13,11 +13,33 @@ export default class App extends React.Component {
                     profile(id: $profileId) {
                         ...LayoutContainer_profile
                     }
+                    champions {
+                        id
+                        firstName
+                        nickName
+                        lastName
+                        kind
+                        type
+                        rarity
+                        statistics {
+                            property
+                            value
+                        }
+                        cards {
+                            card {
+                                id
+                            }
+                        }
+                    }
                     cards {
                         id
                         name
                         type
                         rarity
+                        statistics {
+                            property
+                            value
+                        }
                     }
                 }
             `}

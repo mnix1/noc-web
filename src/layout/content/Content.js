@@ -15,9 +15,10 @@ export default class Content extends React.Component {
     }
 
     get pageProps() {
-        const {screen, cards, profile} = this.props;
+        const {screen, cards, champions, profile} = this.props;
         return {
             decks: profile.decks,
+            champions,
             cards,
             width: screen.width - screen.leftMenuWidth,
             height: screen.height - screen.topMenuHeight,

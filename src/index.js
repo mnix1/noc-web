@@ -8,6 +8,7 @@ import {Provider} from 'react-redux'
 import {createStore} from 'redux'
 import app from './redux/app';
 import {screenResized} from "./redux/reducer/screen";
+// import gameWebSocket from './gameWebSocket';
 
 const store = createStore(app);
 

@@ -9,6 +9,15 @@ const DeckPageContainer = createFragmentContainer(
             id
             name
             position
+            champion {
+                id
+            }
+            cards {
+                position
+                card {
+                    id
+                }
+            }
         }
     `
 );
@@ -22,8 +31,7 @@ const mapStateToProps = (state, props) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-    return {
-    }
+    return {}
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DeckPageContainer);
