@@ -2,13 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import './index.css';
-import App from './component/app/App';
 import Login from "./component/auth/Login";
 import {Provider} from 'react-redux'
 import {createStore} from 'redux'
 import app from './redux/app';
 import {screenResized} from "./redux/reducer/screen";
-// import gameWebSocket from './gameWebSocket';
+import AppContainer from "./component/app/AppContainer";
 
 const store = createStore(app);
 
@@ -24,7 +23,7 @@ fetch('/profile', {credentials: 'include'})
             return ReactDOM.render(<Login/>, document.getElementById('root'));
         }
         ReactDOM.render(<Provider store={store}>
-            <App profileId={profileId}/>
+            <AppContainer profileId={profileId}/>
         </Provider>, document.getElementById('root'));
     })
     .catch(e => {

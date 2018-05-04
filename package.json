@@ -5,6 +5,8 @@
   "dependencies": {
     "base-64": "^0.1.0",
     "classnames": "^2.2.5",
+    "first-person-controls": "^1.0.1",
+    "improved-noise": "0.0.3",
     "lodash": "^4.17.5",
     "lost": "^8.2.1",
     "postcss": "^6.0.21",
@@ -15,7 +17,8 @@
     "react-relay": "^1.5.0",
     "react-scripts": "1.1.4",
     "redux": "^3.7.2",
-    "relay-runtime": "^1.5.0"
+    "relay-runtime": "^1.5.0",
+    "three": "^0.92.0"
   },
   "devDependencies": {
     "babel-plugin-relay": "^1.5.0",

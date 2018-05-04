@@ -2,8 +2,15 @@ import React from 'react';
 import {graphql, QueryRenderer} from 'react-relay/compat';
 import environment from '../../createRelayEnvironment';
 import LayoutContainer from "../../layout/LayoutContainer";
+import CommunicationWebSocket from "./CommunicationWebSocket";
+import BattlePage from "../../layout/content/battle/BattlePage";
+import BattlePageContainer from "../../layout/content/battle/BattlePageContainer";
 
 export default class App extends React.Component {
+
+    componentDidMount() {
+        this.props.onInit(new CommunicationWebSocket());
+    }
 
     renderQuery() {
         return <QueryRenderer
@@ -59,6 +66,10 @@ export default class App extends React.Component {
     }
 
     render() {
+        const {isBattleInProgress} = this.props;
+        if (isBattleInProgress) {
+            return <BattlePageContainer/>;
+        }
         return (
             <div>
                 {this.renderQuery()}

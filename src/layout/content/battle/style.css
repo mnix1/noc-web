@@ -1,5 +1,10 @@
 :local .container {
 }
+
 :local .content {
 
+}
+
+canvas {
+  display: block;
 }
