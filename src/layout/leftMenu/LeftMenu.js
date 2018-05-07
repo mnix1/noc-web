@@ -1,6 +1,6 @@
 import styles from './style.css';
 import React from 'react';
-import logo from '../../logo2.png';
+import logo from '../../content/logo/logo2.png';
 import {PAGES} from "../config";
 import cn from 'classnames';
 
