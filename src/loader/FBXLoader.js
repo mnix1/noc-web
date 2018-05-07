@@ -174,7 +174,7 @@ let FBXLoader;
 
                 let videoNode = videoNodes[nodeID];
 
-                let id = parseInt(nodeID);
+                let id = parseInt(nodeID, 10);
 
                 images[id] = videoNode.RelativeFilename || videoNode.Filename;
 
@@ -244,27 +244,25 @@ let FBXLoader;
                 break;
 
             case 'tga':
-
-            // if (typeof THREE.TGALoader !== 'function') {
-            //
-            //     console.warn('FBXLoader: THREE.TGALoader is required to load TGA textures');
-            //     return;
-            //
-            // } else {
-            //
-            //     if (THREE.Loader.Handlers.get('.tga') === null) {
-            //
-            //         THREE.Loader.Handlers.add(/\.tga$/i, new THREE.TGALoader());
-            //
-            //     }
-            //
-            //     type = 'image/tga';
-            //     break;
-            //
-            // }
-
+                // if (typeof THREE.TGALoader !== 'function') {
+                //
+                //     console.warn('FBXLoader: THREE.TGALoader is required to load TGA textures');
+                //     return;
+                //
+                // } else {
+                //
+                //     if (THREE.Loader.Handlers.get('.tga') === null) {
+                //
+                //         THREE.Loader.Handlers.add(/\.tga$/i, new THREE.TGALoader());
+                //
+                //     }
+                //
+                //     type = 'image/tga';
+                //     break;
+                //
+                // }
+                break;
             default:
-
                 console.warn('FBXLoader: Image type "' + extension + '" is not supported.');
                 return;
 
@@ -296,7 +294,7 @@ let FBXLoader;
             for (let nodeID in textureNodes) {
 
                 let texture = parseTexture(textureNodes[nodeID], loader, images, connections);
-                textureMap.set(parseInt(nodeID), texture);
+                textureMap.set(parseInt(nodeID, 10), texture);
 
             }
 
@@ -392,7 +390,7 @@ let FBXLoader;
 
                 let material = parseMaterial(FBXTree, materialNodes[nodeID], textureMap, connections);
 
-                if (material !== null) materialMap.set(parseInt(nodeID), material);
+                if (material !== null) materialMap.set(parseInt(nodeID, 10), material);
 
             }
 
@@ -607,7 +605,7 @@ let FBXLoader;
 
                 let deformerNode = DeformerNodes[nodeID];
 
-                let relationships = connections.get(parseInt(nodeID));
+                let relationships = connections.get(parseInt(nodeID, 10));
 
                 if (deformerNode.attrType === 'Skin') {
 
@@ -722,7 +720,7 @@ let FBXLoader;
 
             if (morphTargetNode.attrType !== 'BlendShapeChannel') return;
 
-            let targetRelationships = connections.get(parseInt(child.ID));
+            let targetRelationships = connections.get(parseInt(child.ID, 10));
 
             targetRelationships.children.forEach(function (child) {
 
@@ -760,10 +758,10 @@ let FBXLoader;
 
             for (let nodeID in geoNodes) {
 
-                let relationships = connections.get(parseInt(nodeID));
+                let relationships = connections.get(parseInt(nodeID, 10));
                 let geo = parseGeometry(FBXTree, relationships, geoNodes[nodeID], deformers);
 
-                geometryMap.set(parseInt(nodeID), geo);
+                geometryMap.set(parseInt(nodeID, 10), geo);
 
             }
 
@@ -776,15 +774,12 @@ let FBXLoader;
     // Parse single node in FBXTree.Objects.Geometry
     function parseGeometry(FBXTree, relationships, geoNode, deformers) {
         switch (geoNode.attrType) {
-
             case 'Mesh':
                 return parseMeshGeometry(FBXTree, relationships, geoNode, deformers);
-                break;
-
             case 'NurbsCurve':
                 return parseNurbsGeometry(geoNode);
-                break;
-
+            default:
+                return undefined;
         }
 
     }
@@ -1666,7 +1661,7 @@ let FBXLoader;
 
         for (let nodeID in modelNodes) {
 
-            let id = parseInt(nodeID);
+            let id = parseInt(nodeID, 10);
             let node = modelNodes[nodeID];
             let relationships = connections.get(id);
 
@@ -1715,15 +1710,9 @@ let FBXLoader;
         let bone = null;
 
         relationships.parents.forEach(function (parent) {
-
-            for (let ID in skeletons) {
-
-                let skeleton = skeletons[ID];
-
-                skeleton.rawBones.forEach(function (rawBone, i) {
-
+            const funcCreator = (skeleton) => {
+                return (rawBone, i) => {
                     if (rawBone.ID === parent.ID) {
-
                         let subBone = bone;
                         bone = new THREE.Bone();
                         bone.matrixWorld.copy(rawBone.transformLink);
@@ -1739,15 +1728,14 @@ let FBXLoader;
                         if (subBone !== null) {
 
                             bone.add(subBone);
-
                         }
-
                     }
-
-                });
-
+                }
+            };
+            for (let ID in skeletons) {
+                let skeleton = skeletons[ID];
+                skeleton.rawBones.forEach(funcCreator(skeleton));
             }
-
         });
 
         return bone;
@@ -2188,7 +2176,7 @@ let FBXLoader;
 
             let skeleton = skeletons[ID];
 
-            let parents = connections.get(parseInt(skeleton.ID)).parents;
+            let parents = connections.get(parseInt(skeleton.ID, 10)).parents;
 
             parents.forEach(function (parent) {
 
@@ -2362,7 +2350,7 @@ let FBXLoader;
 
             let layerCurveNodes = [];
 
-            let connection = connections.get(parseInt(nodeID));
+            let connection = connections.get(parseInt(nodeID, 10));
 
             if (connection !== undefined) {
 
@@ -2422,7 +2410,7 @@ let FBXLoader;
 
                 });
 
-                layersMap.set(parseInt(nodeID), layerCurveNodes);
+                layersMap.set(parseInt(nodeID, 10), layerCurveNodes);
 
             }
 
@@ -2443,7 +2431,7 @@ let FBXLoader;
 
         for (let nodeID in rawStacks) {
 
-            let children = connections.get(parseInt(nodeID)).children;
+            let children = connections.get(parseInt(nodeID, 10)).children;
 
             if (children.length > 1) {
 
@@ -2675,7 +2663,7 @@ let FBXLoader;
 
         }).filter(function (elem, index, array) {
 
-            return array.indexOf(elem) == index;
+            return array.indexOf(elem) === index;
 
         });
 
@@ -2890,7 +2878,7 @@ let FBXLoader;
 
             if (attrs[0] !== '') {
 
-                id = parseInt(attrs[0]);
+                id = parseInt(attrs[0], 10);
 
                 if (isNaN(id)) {
 
@@ -2941,8 +2929,8 @@ let FBXLoader;
             if (propName === 'C') {
 
                 let connProps = propValue.split(',').slice(1);
-                let from = parseInt(connProps[0]);
-                let to = parseInt(connProps[1]);
+                let from = parseInt(connProps[0], 10);
+                let to = parseInt(connProps[1], 10);
 
                 let rest = propValue.split(',').slice(3);
 
@@ -3015,7 +3003,7 @@ let FBXLoader;
             // ["Lcl Scaling", "Lcl Scaling", "", "A", "1,1,1" ]
             let props = propValue.split('",').map(function (prop) {
 
-                return prop.trim().replace(/^\"/, '').replace(/\s/, '_');
+                return prop.trim().replace(/^\"/, '').replace(/\s/, '_');// eslint-disable-line
 
             });
 
@@ -3027,7 +3015,6 @@ let FBXLoader;
 
             // cast values where needed, otherwise leave as strings
             switch (innerPropType1) {
-
                 case 'int':
                 case 'enum':
                 case 'bool':
@@ -3037,7 +3024,6 @@ let FBXLoader;
                 case 'FieldOfView':
                     innerPropValue = parseFloat(innerPropValue);
                     break;
-
                 case 'Color':
                 case 'ColorRGB':
                 case 'Vector3D':
@@ -3046,7 +3032,8 @@ let FBXLoader;
                 case 'Lcl_Scaling':
                     innerPropValue = parseNumberArray(innerPropValue);
                     break;
-
+                default:
+                    break;
             }
 
             // CAUTION: these props must append to parent's parent
@@ -3118,28 +3105,19 @@ let FBXLoader;
 
         // recursively parse nodes until the end of the file is reached
         parseNode: function (reader, version) {
-
             let node = {};
-
             // The first three data sizes depends on version.
             let endOffset = (version >= 7500) ? reader.getUint64() : reader.getUint32();
             let numProperties = (version >= 7500) ? reader.getUint64() : reader.getUint32();
-
             // note: do not remove this even if you get a linter warning as it moves the buffer forward
-            let propertyListLen = (version >= 7500) ? reader.getUint64() : reader.getUint32();
-
+            let propertyListLen = (version >= 7500) ? reader.getUint64() : reader.getUint32(); // eslint-disable-line
             let nameLen = reader.getUint8();
             let name = reader.getString(nameLen);
-
             // Regards this node as NULL-record if endOffset is zero
             if (endOffset === 0) return null;
-
             let propertyList = [];
-
             for (let i = 0; i < numProperties; i++) {
-
                 propertyList.push(this.parseProperty(reader));
-
             }
 
             // Regards the first three elements in propertyList as id, attrName, and attrType
@@ -3326,7 +3304,6 @@ let FBXLoader;
                 case 'f':
                 case 'i':
                 case 'l':
-
                     let arrayLength = reader.getUint32();
                     let encoding = reader.getUint32(); // 0: non-compressed, 1: compressed
                     let compressedLength = reader.getUint32();
@@ -3350,7 +3327,8 @@ let FBXLoader;
 
                             case 'l':
                                 return reader.getInt64Array(arrayLength);
-
+                            default:
+                                break;
                         }
 
                     }
@@ -3363,29 +3341,25 @@ let FBXLoader;
                     const input = new Uint8Array(reader.getArrayBuffer(compressedLength));
                     let inflate = new pako.inflate(input); // eslint-disable-line no-undef
                     let reader2 = new BinaryReader(inflate.buffer);
-
                     switch (type) {
-
                         case 'b':
                         case 'c':
                             return reader2.getBooleanArray(arrayLength);
-
                         case 'd':
                             return reader2.getFloat64Array(arrayLength);
-
                         case 'f':
                             return reader2.getFloat32Array(arrayLength);
-
                         case 'i':
                             return reader2.getInt32Array(arrayLength);
-
                         case 'l':
                             return reader2.getInt64Array(arrayLength);
-
+                        default:
+                            break;
                     }
-
+                    break;
                 default:
                     throw new Error('FBXLoader: Unknown property type ' + type);
+
 
             }
 
@@ -3695,7 +3669,7 @@ let FBXLoader;
         let match = text.match(versionRegExp);
         if (match) {
 
-            let version = parseInt(match[1]);
+            let version = parseInt(match[1], 10);
             return version;
 
         }

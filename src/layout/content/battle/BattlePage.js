@@ -5,7 +5,6 @@ import {
     BATTLE_STATUS_SEARCHING_OPPONENT
 } from "../../../redux/reducer/battle";
 import Battle from "../../../battle/Battle";
-import MainCraft from "../../../battle/MainCraft";
 
 let battle;
 

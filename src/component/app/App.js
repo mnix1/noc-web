@@ -3,7 +3,6 @@ import {graphql, QueryRenderer} from 'react-relay/compat';
 import environment from '../../createRelayEnvironment';
 import LayoutContainer from "../../layout/LayoutContainer";
 import CommunicationWebSocket from "./CommunicationWebSocket";
-import BattlePage from "../../layout/content/battle/BattlePage";
 import BattlePageContainer from "../../layout/content/battle/BattlePageContainer";
 
 export default class App extends React.Component {

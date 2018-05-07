@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import FirstPersonControls from "first-person-controls";
 
 export default class Field {
 

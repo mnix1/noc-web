@@ -23,7 +23,7 @@ export default class LeftMenu extends React.Component {
     render() {
         return (
             <div className={styles.container} style={this.containerStyle}>
-                <div><img src={logo} width={this.props.width}/></div>
+                <div><img src={logo} width={this.props.width} alt=""/></div>
                 <ul>
                     {PAGES.map(this.renderItem)}
                 </ul>

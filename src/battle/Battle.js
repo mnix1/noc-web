@@ -1,12 +1,7 @@
 import * as THREE from 'three';
-
 import FirstPersonControls from "first-person-controls";
 import Field from "./Field";
-import Champion from "./Character1";
-import Character2 from "./Character2";
-import monkIdle from '../content/fbx/monk/monkIdle.fbx';
-import monk from '../content/fbx/monk/monkT.fbx';
-import FBXLoader from "../loader/FBXLoader";
+import MonkChampion from "./champion/MonkChampion";
 
 export default class Battle {
 
@@ -22,7 +17,6 @@ export default class Battle {
 
         this.initLight();
         this.initCamera();
-        this.mixers = [];
         this.createField();
         this.createChampion();
 
@@ -68,42 +62,23 @@ export default class Battle {
         new Field(this.scene);
     }
 
-    loadFbx(source) {
-        const loader = new FBXLoader();
-        loader.load(source, (object) => {
-            console.log('object', object);
-            // object.mixer = new THREE.AnimationMixer(object);
-            // this.mixers.push(object.mixer);
-            // const action = object.mixer.clipAction(object.animations[0]);
-            // action.play();
-            // // object.traverse(function (child) {
-            // //     if (child.isMesh) {
-            // //         child.castShadow = true;
-            // //         child.receiveShadow = true;
-            // //     }
-            // // });
-            object.rotation.x = Math.PI / 2;
-            object.scale.set(0.01, 0.01, 0.01);
-            this.scene.add(object);
-        });
-    }
-
     createChampion() {
-        this.loadFbx(monk);
+        this.champions = [new MonkChampion((champion) => {
+            champion.place();
+            this.scene.add(champion.mesh);
+        })];
+        // this.loadFbx(monk, );
     }
 
     animate = () => {
         requestAnimationFrame(this.animate);
         const delta = this.clock.getDelta();
-        if (this.mixers.length > 0) {
-            for (let i = 0; i < this.mixers.length; i++) {
-                this.mixers[i].update(delta);
-            }
-
-        }
+        // if (this.mixers.length > 0) {
+        //     for (let i = 0; i < this.mixers.length; i++) {
+        //         this.mixers[i].update(delta);
+        //     }
+        // }
         this.render(delta);
-        // this.champion.mesh.rotation.x = (this.champion.mesh.rotation.x + 0.02 );
-        // this.champion.mesh.rotation.y -= 0.05;
     };
 
     render(delta) {

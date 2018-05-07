@@ -1,5 +1,4 @@
 import {connect} from 'react-redux'
-import {createFragmentContainer, graphql} from "react-relay/compat";
 import CardPage from "./CardPage";
 
 // const CardPageContainer = createFragmentContainer(

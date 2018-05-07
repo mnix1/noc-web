@@ -1,7 +1,7 @@
-import * as THREE from 'three';
-import FirstPersonControls from 'first-person-controls'
-import ImprovedNoise from 'improved-noise';
-import textureImage from './../content/texture/texture3.png';
+// import * as THREE from 'three';
+// import FirstPersonControls from 'first-person-controls'
+// import ImprovedNoise from 'improved-noise';
+// import textureImage from './../content/texture/texture3.png';
 
 export default class MainCraft {
 
