@@ -9,6 +9,7 @@
     "improved-noise": "0.0.3",
     "lodash": "^4.17.5",
     "lost": "^8.2.1",
+    "pako": "^1.0.6",
     "postcss": "^6.0.21",
     "postcss-cssnext": "^3.1.0",
     "react": "^16.2.0",
@@ -18,7 +19,11 @@
     "react-scripts": "1.1.4",
     "redux": "^3.7.2",
     "relay-runtime": "^1.5.0",
-    "three": "^0.92.0"
+    "sea3d": "^1.8.1",
+    "three": "^0.92.0",
+    "three-fbx-loader": "^1.0.3",
+    "threex": "^1.0.0",
+    "zlib": "^1.0.5"
   },
   "devDependencies": {
     "babel-plugin-relay": "^1.5.0",
@@ -26,7 +31,7 @@
     "relay-compiler": "^1.5.0"
   },
   "scripts": {
-    "lint": "eslint src",
+    "lint": "eslint src --quiet --fix",
     "clean": "rm -rf build && mkdir build",
     "get-schema": "node scripts/getSchema.js",
     "relay": "relay-compiler --src ./src --schema schema.graphql",

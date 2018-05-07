@@ -6,15 +6,16 @@ import textureImage from './../texture3.png';
 export default class MainCraft {
 
     constructor(containerId, worldWidth, worldDepth) {
-        var container;
-        var camera, controls, scene, renderer;
-        var worldHalfWidth = worldWidth / 2, worldHalfDepth = worldDepth / 2,
+        let container;
+        let camera, controls, scene, renderer;
+        const worldHalfWidth = worldWidth / 2, worldHalfDepth = worldDepth / 2,
             data = generateHeight(worldWidth, worldDepth);
-        var clock = new THREE.Clock();
+        const clock = new THREE.Clock();
         init();
         animate();
 
         function init() {
+            let colors;
             container = document.getElementById(containerId);
             camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 20000);
             // camera.position.y = getY(worldHalfWidth, worldHalfDepth) * 100 + 100;
@@ -98,60 +99,60 @@ export default class MainCraft {
                     var nxpz = getY(x - 1, z + 1);
                     var pxnz = getY(x + 1, z - 1);
                     var nxnz = getY(x - 1, z - 1);
-                    var a = nx > h || nz > h || nxnz > h ? 0 : 1;
-                    var b = nx > h || pz > h || nxpz > h ? 0 : 1;
-                    var c = px > h || pz > h || pxpz > h ? 0 : 1;
-                    var d = px > h || nz > h || pxnz > h ? 0 : 1;
+                    const a = nx > h || nz > h || nxnz > h ? 0 : 1;
+                    const b = nx > h || pz > h || nxpz > h ? 0 : 1;
+                    const c = px > h || pz > h || pxpz > h ? 0 : 1;
+                    const d = px > h || nz > h || pxnz > h ? 0 : 1;
                     if (a + c > b + d) {
-                        var colors = py2Geometry.faces[0].vertexColors;
+                        colors = py2Geometry.faces[0].vertexColors;
                         colors[0] = b === 0 ? shadow : light;
                         colors[1] = c === 0 ? shadow : light;
                         colors[2] = a === 0 ? shadow : light;
-                        var colors = py2Geometry.faces[1].vertexColors;
+                        colors = py2Geometry.faces[1].vertexColors;
                         colors[0] = c === 0 ? shadow : light;
                         colors[1] = d === 0 ? shadow : light;
                         colors[2] = a === 0 ? shadow : light;
                         geometry.merge(py2Geometry, matrix);
                     } else {
-                        var colors = pyGeometry.faces[0].vertexColors;
+                        colors = pyGeometry.faces[0].vertexColors;
                         colors[0] = a === 0 ? shadow : light;
                         colors[1] = b === 0 ? shadow : light;
                         colors[2] = d === 0 ? shadow : light;
-                        var colors = pyGeometry.faces[1].vertexColors;
+                        colors = pyGeometry.faces[1].vertexColors;
                         colors[0] = b === 0 ? shadow : light;
                         colors[1] = c === 0 ? shadow : light;
                         colors[2] = d === 0 ? shadow : light;
                         geometry.merge(pyGeometry, matrix);
                     }
                     if ((px != h && px != h + 1) || x == 0) {
-                        var colors = pxGeometry.faces[0].vertexColors;
+                        colors = pxGeometry.faces[0].vertexColors;
                         colors[0] = pxpz > px && x > 0 ? shadow : light;
                         colors[2] = pxnz > px && x > 0 ? shadow : light;
-                        var colors = pxGeometry.faces[1].vertexColors;
+                        colors = pxGeometry.faces[1].vertexColors;
                         colors[2] = pxnz > px && x > 0 ? shadow : light;
                         geometry.merge(pxGeometry, matrix);
                     }
                     if ((nx != h && nx != h + 1) || x == worldWidth - 1) {
-                        var colors = nxGeometry.faces[0].vertexColors;
+                        colors = nxGeometry.faces[0].vertexColors;
                         colors[0] = nxnz > nx && x < worldWidth - 1 ? shadow : light;
                         colors[2] = nxpz > nx && x < worldWidth - 1 ? shadow : light;
-                        var colors = nxGeometry.faces[1].vertexColors;
+                        colors = nxGeometry.faces[1].vertexColors;
                         colors[2] = nxpz > nx && x < worldWidth - 1 ? shadow : light;
                         geometry.merge(nxGeometry, matrix);
                     }
                     if ((pz != h && pz != h + 1) || z == worldDepth - 1) {
-                        var colors = pzGeometry.faces[0].vertexColors;
+                        colors = pzGeometry.faces[0].vertexColors;
                         colors[0] = nxpz > pz && z < worldDepth - 1 ? shadow : light;
                         colors[2] = pxpz > pz && z < worldDepth - 1 ? shadow : light;
-                        var colors = pzGeometry.faces[1].vertexColors;
+                        colors = pzGeometry.faces[1].vertexColors;
                         colors[2] = pxpz > pz && z < worldDepth - 1 ? shadow : light;
                         geometry.merge(pzGeometry, matrix);
                     }
                     if ((nz != h && nz != h + 1) || z == 0) {
-                        var colors = nzGeometry.faces[0].vertexColors;
+                        colors = nzGeometry.faces[0].vertexColors;
                         colors[0] = pxnz > nz && z > 0 ? shadow : light;
                         colors[2] = nxnz > nz && z > 0 ? shadow : light;
-                        var colors = nzGeometry.faces[1].vertexColors;
+                        colors = nzGeometry.faces[1].vertexColors;
                         colors[2] = nxnz > nz && z > 0 ? shadow : light;
                         geometry.merge(nzGeometry, matrix);
                     }
