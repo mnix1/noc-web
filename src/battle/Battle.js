@@ -66,18 +66,18 @@ export default class Battle {
         this.champions = [new MonkChampion((champion) => {
             champion.place();
             this.scene.add(champion.mesh);
+            champion.playAnimation('idle');
         })];
-        // this.loadFbx(monk, );
     }
 
     animate = () => {
         requestAnimationFrame(this.animate);
         const delta = this.clock.getDelta();
-        // if (this.mixers.length > 0) {
-        //     for (let i = 0; i < this.mixers.length; i++) {
-        //         this.mixers[i].update(delta);
-        //     }
-        // }
+        if (this.champions.length > 0) {
+            for (let i = 0; i < this.champions.length; i++) {
+                this.champions[i].updateMixer(delta);
+            }
+        }
         this.render(delta);
     };
 
