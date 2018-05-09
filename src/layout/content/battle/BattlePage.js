@@ -23,7 +23,7 @@ export default class BattlePage extends React.Component {
     battleInit() {
         const {battleStatus} = this.props;
         if (battleStatus === BATTLE_STATUS_IN_PROGRESS && battle === undefined) {
-            battle = new Battle(CONTAINER, 100, 100, 8);
+            battle = new Battle(CONTAINER, 32);
             battle.animate();
         }
     }

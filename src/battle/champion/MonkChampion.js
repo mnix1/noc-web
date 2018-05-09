@@ -16,7 +16,7 @@ export default class MonkChampion {
         this.load();
     }
 
-    place() {
+    correctSize() {
         this.mesh.rotation.x = Math.PI / 2;
         this.mesh.scale.set(0.02, 0.02, 0.02);
     }

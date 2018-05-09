@@ -10,7 +10,6 @@
         "shading": "phong",
         "depthTest": true,
         "DbgName": "flower",
-        "colorAmbient": [0.64,0.64,0.64],
         "transparent": true,
         "DbgColor": 15658734,
         "colorEmissive": [0,0,0],

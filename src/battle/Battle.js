@@ -5,24 +5,23 @@ import MonkChampion from "./champion/MonkChampion";
 
 export default class Battle {
 
-    constructor(container, worldWidth, worldHeight, scale) {
+    constructor(container, worldRadius) {
         console.log('battle', this);
         this.clock = new THREE.Clock();
-        this.width = worldHeight * scale;
-        this.height = worldWidth * scale;
         this.scene = new THREE.Scene();
-
+        this.worldRadius = worldRadius;
+        this.initField();
         // const axes = new THREE.AxesHelper(20);
         // this.scene.add(axes);
-
-        this.initLight();
         this.initCamera();
-        this.createField();
-        this.createChampion();
-
-        // this.initControls();
+        this.initLight();
+        this.initChampions();
         // this.camera.position.set()
+        this.initRenderer(container);
+        this.animations = [];
+    }
 
+    initRenderer(container) {
         this.renderer = new THREE.WebGLRenderer({
             alpha: true,
             transparent: true,
@@ -34,8 +33,8 @@ export default class Battle {
         document.getElementById(container).appendChild(this.renderer.domElement);
     }
 
-    initControls() {
-        this.controls = new FirstPersonControls(this.camera);
+    initTestControls() {
+        this.controls = new FirstPersonControls(this.champions[0]);
         this.controls.movementSpeed = 10;
         this.controls.lookSpeed = 0.125;
         // this.controls.lookVertical = true;
@@ -59,20 +58,65 @@ export default class Battle {
 
     initCamera() {
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
-        this.camera.position.set(0, -6, 1);
+        this.camera.position.set(0, 0, 50);
         this.camera.lookAt(new THREE.Vector3(0, 0, 0));
     }
 
-    createField() {
-        new Field(this.scene);
+    initField() {
+        this.field = new Field(this.scene, this.worldRadius);
     }
 
-    createChampion() {
-        this.champions = [new MonkChampion((champion) => {
-            champion.place();
-            this.scene.add(champion.mesh);
-            champion.playAnimation('idle');
-        })];
+    initChampions() {
+        this.champions = [];
+        this.myChampion = new MonkChampion((champion) => {
+            this.initChampion(champion);
+            this.myChampion = champion;
+            this.initChampionControl(this.myChampion);
+        });
+        this.otherChampions = [];
+
+    }
+
+    initChampion(champion) {
+        champion.correctSize();
+        this.scene.add(champion.mesh);
+        champion.playAnimation('idle');
+        this.champions.push(champion);
+        this.placeChampion(champion);
+    }
+
+    placeChampion(champion) {
+        if (this.champions.length === 1) {
+            champion.mesh.position.set(0, -this.worldRadius * 18 / 20, 0);
+            champion.mesh.rotation.y = Math.PI;
+        }
+    }
+
+    initChampionControl(champion) {
+        const startPosition = this.camera.position.clone();
+        const championPosition = champion.mesh.position;
+        const endPosition = new THREE.Vector3(championPosition.x, championPosition.y - 2, 4);
+        const duration = 2;
+        let timer = 0;
+        const newPositionElement = (property) => startPosition[property] + (endPosition[property] - startPosition[property]) * timer / duration;
+        this.animations.push((delta) => {
+            timer += delta;
+            const newActualPosition = timer >= duration ? endPosition : new THREE.Vector3(newPositionElement('x'), newPositionElement('y'), newPositionElement('z'));
+            this.camera.position.set(newActualPosition.x, newActualPosition.y, newActualPosition.z);
+            this.camera.lookAt(new THREE.Vector3(0, 0, 0));
+            return {ended: timer >= duration};
+        });
+    }
+
+    updateAnimations(delta) {
+        const toRemove = [];
+        this.animations.forEach((animation, index) => {
+            const result = animation(delta);
+            if (result.ended) {
+                toRemove.push(index);
+            }
+        });
+        toRemove.forEach(index => this.animations.splice(index, 1));
     }
 
     animate = () => {
@@ -83,9 +127,7 @@ export default class Battle {
     };
 
     render(delta) {
-        if (this.controls) {
-            this.controls.update(delta);
-        }
+        this.updateAnimations(delta);
         this.renderer.render(this.scene, this.camera);
     }
 }

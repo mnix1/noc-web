@@ -29,14 +29,42 @@ const plantsMap = {
     flower_2
 };
 
-const plantRadius = 20;
 
 export default class Ground {
-    constructor(scene) {
+    constructor(scene, worldRadius) {
         this.scene = scene;
+        this.worldRadius = worldRadius;
+        this.createGround();
         this.models = {};
-        const groundSource = new THREE.TextureLoader().load(groundMap);
-        this.createPlants(groundSource);
+        const groundSource = new THREE.TextureLoader().load(groundMap, () => {
+            this.createPlants(groundSource);
+        });
+
+    }
+
+    createGround() {
+        const planeMat = new THREE.MeshPhongMaterial({
+            color: 0x455029,
+            specular: 0x000000,
+            shininess: 0,
+            side: THREE.DoubleSide,
+        });
+        const segments = 32;
+        const circleGeometry = new THREE.CircleGeometry(this.worldRadius, segments);
+
+        // Ground
+        const ground = new THREE.Mesh(circleGeometry, planeMat);
+        this.scene.add(ground);
+        const boundMat = new THREE.MeshPhongMaterial({
+            color: 0x111111,
+            specular: 0x000000,
+            shininess: 0,
+            flatShading: THREE.FlatShading
+        });
+
+        const boundGeometry = new THREE.TorusGeometry(this.worldRadius - 0.5, 1, 6, 180);
+        const bound = new THREE.Mesh(boundGeometry, boundMat);
+        this.scene.add(bound);
     }
 
     createPlants(texture) {
@@ -65,13 +93,12 @@ export default class Ground {
     creator(name) {
         switch (name) {
             case 'grass':
-                return this.createRandomObject(700, name, plantRadius);
+                return this.createRandomObject(2000, name, this.worldRadius - 2);
             case 'flower_1':
-                return this.createRandomObject(200, name, plantRadius);
             case 'flower_2':
-                return this.createRandomObject(200, name, plantRadius);
+                return this.createRandomObject(400, name, this.worldRadius - 2);
             default:
-                return this.createRandomObject(5, name, plantRadius);
+                return this.createRandomObject(10, name, this.worldRadius - 2);
         }
     }
 
