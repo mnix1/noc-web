@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import FBXLoader from "../../loader/FBXLoader";
 import monkWalk from '../../content/fbx/monk/monkWalk.fbx';
 import monkIdle from '../../content/fbx/monk/monkIdle.fbx';
+import monkRun from '../../content/fbx/monk/monkRun.fbx';
 import monk from '../../content/fbx/monk/monkT.fbx';
 import _ from 'lodash';
 
@@ -9,19 +10,29 @@ export default class MonkChampion {
     constructor(onLoad) {
         this.onLoad = onLoad;
         this.baseSource = monk;
-        this.animationSources = {idle: monkIdle, walk: monkWalk};
+        this.animationSources = {idle: monkIdle, walk: monkWalk, run: monkRun};
         this.animations = {};
+        this.actions = {};
         this.load();
     }
 
     place() {
         this.mesh.rotation.x = Math.PI / 2;
-        this.mesh.scale.set(0.01, 0.01, 0.01);
+        this.mesh.scale.set(0.02, 0.02, 0.02);
     }
 
     playAnimation(key) {
         const action = this.mesh.mixer.clipAction(this.animations[key]);
         action.play();
+        this.actions[key] = action;
+    }
+
+    stopAnimation(key) {
+        const action = this.actions[key];
+        if (action) {
+            action.stop();
+            delete this.actions[key];
+        }
     }
 
     updateMixer(delta) {

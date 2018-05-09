@@ -7,4 +7,5 @@
 
 canvas {
   display: block;
+  background:linear-gradient(#00ADFF 0%,#eee 100%);
 }

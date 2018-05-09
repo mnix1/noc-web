@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import FirstPersonControls from "first-person-controls";
-import Field from "./Field";
+import Field from "./field/Field";
 import MonkChampion from "./champion/MonkChampion";
 
 export default class Battle {
@@ -12,8 +12,8 @@ export default class Battle {
         this.height = worldWidth * scale;
         this.scene = new THREE.Scene();
 
-        const axes = new THREE.AxesHelper(20);
-        this.scene.add(axes);
+        // const axes = new THREE.AxesHelper(20);
+        // this.scene.add(axes);
 
         this.initLight();
         this.initCamera();
@@ -23,13 +23,18 @@ export default class Battle {
         // this.initControls();
         // this.camera.position.set()
 
-        this.renderer = new THREE.WebGLRenderer({antialias: true});
+        this.renderer = new THREE.WebGLRenderer({
+            alpha: true,
+            transparent: true,
+            antialias: true
+        });
         this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         document.getElementById(container).appendChild(this.renderer.domElement);
     }
 
     initControls() {
-
         this.controls = new FirstPersonControls(this.camera);
         this.controls.movementSpeed = 10;
         this.controls.lookSpeed = 0.125;
@@ -40,10 +45,10 @@ export default class Battle {
     }
 
     initLight() {
-        const ambientLight = new THREE.AmbientLight(0xffffff); // soft white light
+        const ambientLight = new THREE.AmbientLight(0x888888); // soft white light
         this.scene.add(ambientLight);
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-        directionalLight.position.set(0, -10, 10);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(0, -1, 1);
         this.scene.add(directionalLight);
 
         // this.spotLight = new THREE.SpotLight(0xffffff);
@@ -73,11 +78,7 @@ export default class Battle {
     animate = () => {
         requestAnimationFrame(this.animate);
         const delta = this.clock.getDelta();
-        if (this.champions.length > 0) {
-            for (let i = 0; i < this.champions.length; i++) {
-                this.champions[i].updateMixer(delta);
-            }
-        }
+        this.champions.forEach(e => e.updateMixer(delta));
         this.render(delta);
     };
 
