@@ -39,21 +39,19 @@ export default class Ground {
         const groundSource = new THREE.TextureLoader().load(groundMap, () => {
             this.createPlants(groundSource);
         });
-
     }
 
     createGround() {
         const planeMat = new THREE.MeshPhongMaterial({
-            color: 0x455029,
+            color: 0x849f4d,
             specular: 0x000000,
             shininess: 0,
             side: THREE.DoubleSide,
         });
         const segments = 32;
         const circleGeometry = new THREE.CircleGeometry(this.worldRadius, segments);
-
-        // Ground
         const ground = new THREE.Mesh(circleGeometry, planeMat);
+        ground.rotation.x = Math.PI / 2;
         this.scene.add(ground);
         const boundMat = new THREE.MeshPhongMaterial({
             color: 0x111111,
@@ -61,9 +59,9 @@ export default class Ground {
             shininess: 0,
             flatShading: THREE.FlatShading
         });
-
         const boundGeometry = new THREE.TorusGeometry(this.worldRadius - 0.5, 1, 6, 180);
         const bound = new THREE.Mesh(boundGeometry, boundMat);
+        bound.rotation.x = Math.PI / 2;
         this.scene.add(bound);
     }
 
@@ -72,7 +70,6 @@ export default class Ground {
         texture.needsUpdate = true;
         const material = new THREE.MeshPhongMaterial({
             color: new THREE.Color(0xffffff),
-            side: THREE.DoubleSide,
             shininess: 0,
             map: texture,
             bumpMap: texture,
@@ -81,6 +78,7 @@ export default class Ground {
             depthTest: true,
             depthWrite: true,
             alphaTest: .25,
+            side: THREE.DoubleSide
         });
         const jsonLoader = new THREE.JSONLoader();
         _.forEach(plantsMap, (value, key) => {
@@ -93,7 +91,7 @@ export default class Ground {
     creator(name) {
         switch (name) {
             case 'grass':
-                return this.createRandomObject(2000, name, this.worldRadius - 2);
+                return this.createRandomObject(1000, name, this.worldRadius - 2);
             case 'flower_1':
             case 'flower_2':
                 return this.createRandomObject(400, name, this.worldRadius - 2);
@@ -108,8 +106,8 @@ export default class Ground {
             const p = this.calculatePointInCircle(r);
             group.children[g] = this.models[name].clone();
             group.children[g].position.x = p[0];
-            group.children[g].position.y = p[1];
-            group.children[g].rotation.x = Math.PI / 2;
+            group.children[g].position.z = p[1];
+            group.children[g].rotation.y = this.randNum(0, 360, true) * Math.PI / 180;
             const scalar = this.randNum(.92, 1, false);
             group.children[g].scale.set(scalar, scalar, scalar);
         }

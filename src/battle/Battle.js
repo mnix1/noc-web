@@ -1,7 +1,12 @@
 import * as THREE from 'three';
-import FirstPersonControls from "first-person-controls";
 import Field from "./field/Field";
 import MonkChampion from "./champion/MonkChampion";
+import {Control} from "./control/Control";
+import {Stats} from "three-stats";
+
+// const stats = new Stats();
+// stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+// document.body.appendChild(stats.dom);
 
 export default class Battle {
 
@@ -10,15 +15,14 @@ export default class Battle {
         this.clock = new THREE.Clock();
         this.scene = new THREE.Scene();
         this.worldRadius = worldRadius;
+        this.animations = [];
+        this.initRenderer(container);
         this.initField();
         // const axes = new THREE.AxesHelper(20);
         // this.scene.add(axes);
         this.initCamera();
         this.initLight();
         this.initChampions();
-        // this.camera.position.set()
-        this.initRenderer(container);
-        this.animations = [];
     }
 
     initRenderer(container) {
@@ -33,37 +37,23 @@ export default class Battle {
         document.getElementById(container).appendChild(this.renderer.domElement);
     }
 
-    initTestControls() {
-        this.controls = new FirstPersonControls(this.champions[0]);
-        this.controls.movementSpeed = 10;
-        this.controls.lookSpeed = 0.125;
-        // this.controls.lookVertical = true;
-        // this.controls.constrainVertical = true;
-        // this.controls.verticalMin = 1.1;
-        // this.controls.verticalMax = 2.2;
-    }
-
     initLight() {
-        const ambientLight = new THREE.AmbientLight(0x888888); // soft white light
+        const ambientLight = new THREE.AmbientLight(0xaaaaaa);
         this.scene.add(ambientLight);
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-        directionalLight.position.set(0, -1, 1);
-        this.scene.add(directionalLight);
-
-        // this.spotLight = new THREE.SpotLight(0xffffff);
-        // this.spotLight.position.set(0, 0, 20);
-        // this.spotLight.lookAt(this.scene.position);
-        // this.scene.add(this.spotLight);
     }
 
     initCamera() {
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
-        this.camera.position.set(0, 0, 50);
+        this.camera.position.set(0, 50, 0);
         this.camera.lookAt(new THREE.Vector3(0, 0, 0));
     }
 
     initField() {
         this.field = new Field(this.scene, this.worldRadius);
+        this.animations.push((delta) => {
+            this.field.updateSunPosition(delta);
+            return {ended: false};
+        });
     }
 
     initChampions() {
@@ -74,7 +64,6 @@ export default class Battle {
             this.initChampionControl(this.myChampion);
         });
         this.otherChampions = [];
-
     }
 
     initChampion(champion) {
@@ -87,7 +76,7 @@ export default class Battle {
 
     placeChampion(champion) {
         if (this.champions.length === 1) {
-            champion.mesh.position.set(0, -this.worldRadius * 18 / 20, 0);
+            champion.mesh.position.set(0, 0, -this.worldRadius * 18 / 20);
             champion.mesh.rotation.y = Math.PI;
         }
     }
@@ -95,7 +84,7 @@ export default class Battle {
     initChampionControl(champion) {
         const startPosition = this.camera.position.clone();
         const championPosition = champion.mesh.position;
-        const endPosition = new THREE.Vector3(championPosition.x, championPosition.y - 2, 4);
+        const endPosition = new THREE.Vector3(championPosition.x, 4, championPosition.z - 4);
         const duration = 2;
         let timer = 0;
         const newPositionElement = (property) => startPosition[property] + (endPosition[property] - startPosition[property]) * timer / duration;
@@ -104,8 +93,13 @@ export default class Battle {
             const newActualPosition = timer >= duration ? endPosition : new THREE.Vector3(newPositionElement('x'), newPositionElement('y'), newPositionElement('z'));
             this.camera.position.set(newActualPosition.x, newActualPosition.y, newActualPosition.z);
             this.camera.lookAt(new THREE.Vector3(0, 0, 0));
+            if (timer >= duration) {
+                this.championControlReady = true;
+            }
             return {ended: timer >= duration};
         });
+        // this.controls = new Control([this.myChampion.mesh, this.camera]);
+        this.controls = new Control(this.myChampion.mesh, this.renderer.domElement);
     }
 
     updateAnimations(delta) {
@@ -119,6 +113,36 @@ export default class Battle {
         toRemove.forEach(index => this.animations.splice(index, 1));
     }
 
+    updateControls(delta) {
+        if (this.controls) {
+            if (this.controls.isMoving()) {
+                if (this.controls.moveForward) {
+                    if (this.controls.fastMovement) {
+                        this.myChampion.stopAllAndPlayAnimation('run');
+                    } else {
+                        this.myChampion.stopAllAndPlayAnimation('walk');
+                    }
+                } else if (this.controls.moveBackward) {
+                    this.myChampion.stopAllAndPlayAnimation('walkBack');
+                } else if (this.controls.moveRight) {
+                    this.myChampion.stopAllAndPlayAnimation('walkRight');
+                } else if (this.controls.moveLeft) {
+                    this.myChampion.stopAllAndPlayAnimation('walkLeft');
+                } else {
+
+                }
+            } else {
+                this.myChampion.stopAllAndPlayAnimation('idle');
+            }
+            this.controls.update(delta);
+            if (this.championControlReady) {
+                const newCameraPosition = this.controls.prepareCameraPosition();
+                this.camera.position.set(newCameraPosition.x, newCameraPosition.y, newCameraPosition.z);
+                this.camera.lookAt(this.controls.target);
+            }
+        }
+    }
+
     animate = () => {
         requestAnimationFrame(this.animate);
         const delta = this.clock.getDelta();
@@ -127,7 +151,9 @@ export default class Battle {
     };
 
     render(delta) {
+        // stats.update();
         this.updateAnimations(delta);
+        this.updateControls(delta);
         this.renderer.render(this.scene, this.camera);
     }
 }

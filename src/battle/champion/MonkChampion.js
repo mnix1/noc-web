@@ -1,6 +1,9 @@
 import * as THREE from 'three';
 import FBXLoader from "../../loader/FBXLoader";
 import monkWalk from '../../content/fbx/monk/monkWalk.fbx';
+import monkWalkBack from '../../content/fbx/monk/monkWalkBack.fbx';
+import monkWalkRight from '../../content/fbx/monk/monkWalkRight.fbx';
+import monkWalkLeft from '../../content/fbx/monk/monkWalkLeft.fbx';
 import monkIdle from '../../content/fbx/monk/monkIdle.fbx';
 import monkRun from '../../content/fbx/monk/monkRun.fbx';
 import monk from '../../content/fbx/monk/monkT.fbx';
@@ -10,14 +13,14 @@ export default class MonkChampion {
     constructor(onLoad) {
         this.onLoad = onLoad;
         this.baseSource = monk;
-        this.animationSources = {idle: monkIdle, walk: monkWalk, run: monkRun};
+        this.animationSources = {idle: monkIdle, walk: monkWalk, walkBack: monkWalkBack, walkRight: monkWalkRight, walkLeft: monkWalkLeft, run: monkRun};
         this.animations = {};
         this.actions = {};
         this.load();
     }
 
     correctSize() {
-        this.mesh.rotation.x = Math.PI / 2;
+        // this.mesh.rotation.y = Math.PI / 2;
         this.mesh.scale.set(0.02, 0.02, 0.02);
     }
 
@@ -33,6 +36,16 @@ export default class MonkChampion {
             action.stop();
             delete this.actions[key];
         }
+    }
+
+    stopAllAndPlayAnimation(playKey) {
+        this.playAnimation(playKey);
+        _.forEach(this.actions, (value, key) => {
+            if(playKey !== key){
+                value.stop();
+                delete this.actions[key];
+            }
+        });
     }
 
     updateMixer(delta) {
