@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 import Field from "./field/Field";
-import MonkChampion from "./champion/MonkChampion";
+import TommyBrookChampion from "./champion/TommyBrookChampion";
 import {Control} from "./control/Control";
 import {Stats} from "three-stats";
+import AlbertHoopChampion from "./champion/AlbertHoopChampion";
 
 // const stats = new Stats();
 // stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
@@ -58,12 +59,15 @@ export default class Battle {
 
     initChampions() {
         this.champions = [];
-        this.myChampion = new MonkChampion((champion) => {
+        this.myChampion = new TommyBrookChampion((champion) => {
             this.initChampion(champion);
             this.myChampion = champion;
             this.initChampionControl(this.myChampion);
         });
-        this.otherChampions = [];
+        this.otherChampions = [new AlbertHoopChampion((champion) => {
+            this.initChampion(champion);
+            // this.initChampionControl(this.myChampion);
+        })];
     }
 
     initChampion(champion) {
@@ -77,7 +81,10 @@ export default class Battle {
     placeChampion(champion) {
         if (this.champions.length === 1) {
             champion.mesh.position.set(0, 0, -this.worldRadius * 18 / 20);
-            champion.mesh.rotation.y = Math.PI;
+            // champion.mesh.rotation.y = Math.PI;
+        } else {
+            champion.mesh.position.set(0, 0, this.worldRadius * 18 / 20);
+            // champion.mesh.rotation.y = 0;
         }
     }
 

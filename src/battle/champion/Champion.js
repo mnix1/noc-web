@@ -1,19 +1,19 @@
 import * as THREE from 'three';
 import FBXLoader from "../../loader/FBXLoader";
-import monkWalk from '../../content/fbx/monk/monkWalk.fbx';
-import monkWalkBack from '../../content/fbx/monk/monkWalkBack.fbx';
-import monkWalkRight from '../../content/fbx/monk/monkWalkRight.fbx';
-import monkWalkLeft from '../../content/fbx/monk/monkWalkLeft.fbx';
-import monkIdle from '../../content/fbx/monk/monkIdle.fbx';
-import monkRun from '../../content/fbx/monk/monkRun.fbx';
-import monk from '../../content/fbx/monk/monkT.fbx';
+import monkWalk from '../../content/fbx/tommyBrook/walk.fbx';
+import monkWalkBack from '../../content/fbx/tommyBrook/walkBack.fbx';
+import monkWalkRight from '../../content/fbx/tommyBrook/walkRight.fbx';
+import monkWalkLeft from '../../content/fbx/tommyBrook/walkLeft.fbx';
+import monkIdle from '../../content/fbx/tommyBrook/idle.fbx';
+import monkRun from '../../content/fbx/tommyBrook/run.fbx';
+import monk from '../../content/fbx/tommyBrook/base.fbx';
 import _ from 'lodash';
 
-export default class MonkChampion {
-    constructor(onLoad) {
+export default class Champion {
+    constructor(onLoad, baseSource, animationSources) {
         this.onLoad = onLoad;
-        this.baseSource = monk;
-        this.animationSources = {idle: monkIdle, walk: monkWalk, walkBack: monkWalkBack, walkRight: monkWalkRight, walkLeft: monkWalkLeft, run: monkRun};
+        this.baseSource = baseSource;
+        this.animationSources = animationSources;
         this.animations = {};
         this.actions = {};
         this.load();

@@ -1,0 +1,21 @@
+import walk from '../../content/fbx/tommyBrook/walk.fbx';
+import walkBack from '../../content/fbx/tommyBrook/walkBack.fbx';
+import walkRight from '../../content/fbx/tommyBrook/walkRight.fbx';
+import walkLeft from '../../content/fbx/tommyBrook/walkLeft.fbx';
+import idle from '../../content/fbx/tommyBrook/idle.fbx';
+import run from '../../content/fbx/tommyBrook/run.fbx';
+import base from '../../content/fbx/tommyBrook/base.fbx';
+import Champion from "./Champion";
+
+export default class TommyBrookChampion extends Champion {
+    constructor(onLoad) {
+        super(onLoad, base, {
+            idle,
+            walk,
+            walkBack,
+            walkRight,
+            walkLeft,
+            run
+        })
+    }
+}

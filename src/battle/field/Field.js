@@ -24,7 +24,7 @@ export default class Field {
         const fullRotationDuration = 30;
         const t = this.time / fullRotationDuration * Math.PI * 2;
         this.pointLight1.position.set(Math.sin(t) * this.worldRadius, Math.cos(t) * this.worldRadius, 0);
-        this.pointLight2.position.set(0, Math.sin(t / 2) * this.worldRadius, Math.cos(t / 2) * this.worldRadius);
+        this.pointLight2.position.set(0, Math.sin(t / 2 + Math.PI * 3 / 4) * this.worldRadius, Math.cos(t / 2 + Math.PI * 3 / 4) * this.worldRadius);
     }
 
     // createTree(scene, x, y, heightScale) {

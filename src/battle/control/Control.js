@@ -51,7 +51,6 @@ export class Control {
         document.addEventListener('pointerlockerror', this.onPointerLockError, false);
         window.addEventListener('click', this.onMouseClickWithoutLock, false);
         this.domElement.addEventListener('contextmenu', this.contextMenu, false);
-        console.log(this.domElement);
         window.addEventListener('keydown', this.onKeyDown, false);
         window.addEventListener('keyup', this.onKeyUp, false);
         this.handleResize();

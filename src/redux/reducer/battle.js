@@ -5,7 +5,7 @@ export const BATTLE_STATUS_IN_PROGRESS= 'in-progress';
 const BATTLE_STATUS_CHANGED = 'battle/status/changed';
 
 const initialState = {
-    battleStatus: BATTLE_STATUS_IN_PROGRESS,
+    battleStatus: undefined,
 };
 
 export default function reducer(state = initialState, action) {
