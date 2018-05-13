@@ -1,9 +1,8 @@
 import * as THREE from 'three';
-import Field from "./field/Field";
-import TommyBrookChampion from "./champion/TommyBrookChampion";
-import {Control} from "./control/Control";
-import {Stats} from "three-stats";
-import AlbertHoopChampion from "./champion/AlbertHoopChampion";
+import BattleCommunication from "./BattleCommunication";
+import BattleWorld from "./BattleWorld";
+import BattleObjects from "./BattleObjects";
+import {getChampionById} from "./champion/ChampionHelper";
 
 // const stats = new Stats();
 // stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
@@ -11,163 +10,36 @@ import AlbertHoopChampion from "./champion/AlbertHoopChampion";
 
 export default class Battle {
 
-    constructor(container, worldRadius) {
+    constructor(container, worldRadius, socket) {
         console.log('battle', this);
         this.clock = new THREE.Clock();
-        this.scene = new THREE.Scene();
-        this.worldRadius = worldRadius;
-        this.animations = [];
-        this.champions = [];
-        this.initRenderer(container);
-        this.initField();
-        // const axes = new THREE.AxesHelper(20);
-        // this.scene.add(axes);
-        this.initCamera();
-        this.initLight();
-        // this.initChampions();
+        this.communication = new BattleCommunication(socket, this);
+        this.world = new BattleWorld(container, worldRadius);
     }
 
-    initRenderer(container) {
-        this.renderer = new THREE.WebGLRenderer({
-            alpha: true,
-            transparent: true,
-            antialias: true
+    init(battleState) {
+        const myChampionProps = battleState.my.find(e => e.t === 'CHAMPION');
+        const otherChampionProps = battleState.other.find(e => e.t === 'CHAMPION');
+        this.world.initOtherChampion(otherChampionProps).then(() => {
+            return this.world.initMyChampion(myChampionProps);
+        }).then(() => {
+            this.communication.ready();
         });
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
-        this.renderer.shadowMap.enabled = true;
-        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        document.getElementById(container).appendChild(this.renderer.domElement);
-    }
-
-    initLight() {
-        const ambientLight = new THREE.AmbientLight(0xaaaaaa);
-        this.scene.add(ambientLight);
-    }
-
-    initCamera() {
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
-        this.camera.position.set(0, 50, 0);
-        this.camera.lookAt(new THREE.Vector3(0, 0, 0));
-    }
-
-    initField() {
-        this.field = new Field(this.scene, this.worldRadius);
-        this.animations.push((delta) => {
-            this.field.updateSunPosition(delta);
-            return {ended: false};
-        });
-    }
-
-    initChampions() {
-        this.myChampion = new TommyBrookChampion((champion) => {
-            this.initChampion(champion);
-            this.initChampionControl(champion);
-        });
-        this.otherChampion = new AlbertHoopChampion((champion) => {
-            this.initChampion(champion);
-            // this.initChampionControl(this.myChampion);
-        });
-        // this.otherChampions = [];
-    }
-
-    initMyChampion(championClass, props) {
-        this.myChampion = new championClass((champion) => {
-            this.initChampion(champion, props);
-            this.initChampionControl(champion, props);
-        })
-    }
-
-    initOtherChampion(championClass, props) {
-        this.otherChampion = new championClass((champion) => {
-            this.initChampion(champion, props);
-        })
-    }
-
-    initChampion(champion, props) {
-        champion.correctSize();
-        this.scene.add(champion.mesh);
-        champion.playAnimation('idle');
-        this.champions.push(champion);
-        this.placeChampion(champion, props);
-    }
-
-    placeChampion(champion, props) {
-        champion.mesh.position.set(props.px, props.py, props.pz);
-        champion.mesh.rotation.set(props.rx, props.ry, props.rz);
-    }
-
-    initChampionControl(champion, props) {
-        const startPosition = this.camera.position.clone();
-        const championPosition = champion.mesh.position;
-        const endPosition = new THREE.Vector3(championPosition.x, 4, championPosition.z - 4);
-        const duration = 2;
-        let timer = 0;
-        const newPositionElement = (property) => startPosition[property] + (endPosition[property] - startPosition[property]) * timer / duration;
-        this.animations.push((delta) => {
-            timer += delta;
-            const newActualPosition = timer >= duration ? endPosition : new THREE.Vector3(newPositionElement('x'), newPositionElement('y'), newPositionElement('z'));
-            this.camera.position.set(newActualPosition.x, newActualPosition.y, newActualPosition.z);
-            this.camera.lookAt(new THREE.Vector3(0, 0, 0));
-            if (timer >= duration) {
-                this.championControlReady = true;
-            }
-            return {ended: timer >= duration};
-        });
-        this.controls = new Control(this.myChampion.mesh, this.renderer.domElement, THREE.Math.radToDeg(props.ry) + 90);
-    }
-
-    updateAnimations(delta) {
-        const toRemove = [];
-        this.animations.forEach((animation, index) => {
-            const result = animation(delta);
-            if (result.ended) {
-                toRemove.push(index);
-            }
-        });
-        toRemove.forEach(index => this.animations.splice(index, 1));
-    }
-
-    updateControls(delta) {
-        if (this.controls) {
-            if (this.controls.isMoving()) {
-                if (this.controls.moveForward) {
-                    if (this.controls.fastMovement) {
-                        this.myChampion.stopAllAndPlayAnimation('run');
-                    } else {
-                        this.myChampion.stopAllAndPlayAnimation('walk');
-                    }
-                } else if (this.controls.moveBackward) {
-                    this.myChampion.stopAllAndPlayAnimation('walkBack');
-                } else if (this.controls.moveRight) {
-                    this.myChampion.stopAllAndPlayAnimation('walkRight');
-                } else if (this.controls.moveLeft) {
-                    this.myChampion.stopAllAndPlayAnimation('walkLeft');
-                } else {
-
-                }
-            } else {
-                this.myChampion.stopAllAndPlayAnimation('idle');
-            }
-            this.controls.update(delta);
-            if (this.championControlReady) {
-                const newCameraPosition = this.controls.prepareCameraPosition();
-                this.camera.position.set(newCameraPosition.x, newCameraPosition.y, newCameraPosition.z);
-                this.camera.lookAt(this.controls.target);
-            }
+        this.world.onMoveChanged = (control) => {
+            this.communication.send(control.serialize());
         }
+    }
+
+    update(battleState) {
+        const myChampionProps = battleState.my.find(e => e.t === 'CHAMPION');
+        const otherChampionProps = battleState.other.find(e => e.t === 'CHAMPION');
+        this.world.placeChampion(this.world.myChampion, myChampionProps);
+        this.world.placeChampion(this.world.otherChampion, otherChampionProps);
     }
 
     animate = () => {
         requestAnimationFrame(this.animate);
         const delta = this.clock.getDelta();
-        this.champions.forEach(e => e.updateMixer(delta));
-        this.render(delta);
+        this.world.render(delta);
     };
-
-    render(delta) {
-        // stats.update();
-        this.updateAnimations(delta);
-        this.updateControls(delta);
-        this.renderer.render(this.scene, this.camera);
-    }
 }

@@ -8,8 +8,8 @@ import base from '../../content/fbx/tommyBrook/base.fbx';
 import Champion from "./Champion";
 
 export default class TommyBrookChampion extends Champion {
-    constructor(onLoad) {
-        super(onLoad, base, {
+    constructor() {
+        super(base, {
             idle,
             walk,
             walkBack,

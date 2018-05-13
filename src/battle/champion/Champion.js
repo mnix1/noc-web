@@ -3,13 +3,11 @@ import FBXLoader from "../../loader/FBXLoader";
 import _ from 'lodash';
 
 export default class Champion {
-    constructor(onLoad, baseSource, animationSources) {
-        this.onLoad = onLoad;
+    constructor(baseSource, animationSources) {
         this.baseSource = baseSource;
         this.animationSources = animationSources;
         this.animations = {};
         this.actions = {};
-        this.load();
     }
 
     correctSize() {
@@ -18,9 +16,11 @@ export default class Champion {
     }
 
     playAnimation(key) {
-        const action = this.mesh.mixer.clipAction(this.animations[key]);
-        action.play();
-        this.actions[key] = action;
+        if (!this.actions[key]) {
+            const action = this.mesh.mixer.clipAction(this.animations[key]);
+            action.play();
+            this.actions[key] = action;
+        }
     }
 
     stopAnimation(key) {
@@ -34,7 +34,7 @@ export default class Champion {
     stopAllAndPlayAnimation(playKey) {
         this.playAnimation(playKey);
         _.forEach(this.actions, (value, key) => {
-            if(playKey !== key){
+            if (playKey !== key) {
                 value.stop();
                 delete this.actions[key];
             }
@@ -42,9 +42,7 @@ export default class Champion {
     }
 
     updateMixer(delta) {
-        if (this.mesh && this.mesh.mixer) {
-            this.mesh.mixer.update(delta);
-        }
+        this.mesh.mixer.update(delta);
     }
 
     load() {
@@ -56,35 +54,16 @@ export default class Champion {
                 });
             });
         });
-        new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             new FBXLoader().load(this.baseSource, (baseObject) => {
                 this.mesh = baseObject;
                 this.mesh.mixer = new THREE.AnimationMixer(this.mesh);
-                resolve(baseObject);
+                Promise.all(animationPromises).then(() => {
+                    // this.isLoaded;
+                    resolve(this);
+                })
             });
-        }).then(() => {
-            Promise.all(animationPromises).then(() => {
-                this.onLoad(this);
-            })
-        });
-
-        // const animations = [];
-        // new FBXLoader().load(baseSource, (baseObject) => {
-        //     console.log('baseObject', baseObject);
-        //     this.mesh = baseObject;
-        //     baseObject.mixer = new THREE.AnimationMixer(baseObject);
-        //     this.mixer = baseObject.mixer;
-        //     animationSources.forEach(animationSource => {
-        //         new FBXLoader().load(animationSource, (animationObject) => {
-        //             console.log('animationObject', animationObject);
-        //             animations.push(animationObject.animations[0]);
-        //             const action = baseObject.mixer.clipAction(animations[0]);
-        //             action.play();
-        //         });
-        //     });
-        //     this.onLoad(this);
-        //     // this.scene.add(baseObject);
-        // });
+        })
     }
 
 }

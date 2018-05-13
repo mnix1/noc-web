@@ -3,7 +3,7 @@ import * as THREE from 'three';
 export class Control {
 
     constructor(object, domElement, startPosition) {
-        // this.object = new ControlObject(object);
+        this.moveChangedListeners = [];
         this.object = object;
         this.target = new THREE.Vector3(0, 0, 0);
 
@@ -130,28 +130,22 @@ export class Control {
         switch (event.keyCode) {
             case 38: /*up*/
             case 87: /*W*/
-                this.moveForward = true;
+                this.moveChange('moveForward', true);
                 break;
             case 37: /*left*/
             case 65: /*A*/
-                this.moveLeft = true;
+                this.moveChange('moveLeft', true);
                 break;
             case 40: /*down*/
             case 83: /*S*/
-                this.moveBackward = true;
+                this.moveChange('moveBackward', true);
                 break;
             case 39: /*right*/
             case 68: /*D*/
-                this.moveRight = true;
-                break;
-            case 82: /*R*/
-                this.moveUp = true;
-                break;
-            case 70: /*F*/
-                this.moveDown = true;
+                this.moveChange('moveRight', true);
                 break;
             case 16: /*SHIFT*/
-                this.fastMovement = true;
+                this.moveChange('fastMovement', true);
                 break;
             default:
                 return;
@@ -162,44 +156,52 @@ export class Control {
         switch (event.keyCode) {
             case 38: /*up*/
             case 87: /*W*/
-                this.moveForward = false;
+                this.moveChange('moveForward', false);
                 break;
-
             case 37: /*left*/
             case 65: /*A*/
-                this.moveLeft = false;
+                this.moveChange('moveLeft', false);
                 break;
-
             case 40: /*down*/
             case 83: /*S*/
-                this.moveBackward = false;
+                this.moveChange('moveBackward', false);
                 break;
-
             case 39: /*right*/
             case 68: /*D*/
-                this.moveRight = false;
-                break;
-
-            case 82: /*R*/
-                this.moveUp = false;
-                break;
-            case 70: /*F*/
-                this.moveDown = false;
+                this.moveChange('moveRight', false);
                 break;
             case 16: /*SHIFT*/
-                this.fastMovement = false;
+                this.moveChange('fastMovement', false);
                 break;
             default:
                 return;
         }
     };
 
+    addMoveChangedListener(e) {
+        this.moveChangedListeners.push(e);
+    }
+
+    moveChange(prop, newState) {
+        if (this[prop] !== newState) {
+            this[prop] = newState;
+            this.handleMoveChanged();
+        }
+    }
+
+    handleMoveChanged() {
+        this.moveChangedListeners.forEach((e) => e(this));
+    }
+
     contextMenu(event) {
         event.preventDefault();
     }
 
     dispose() {
-        this.domElement.removeEventListener('contextMenu', this.contextMenu, false);
+        document.removeEventListener('pointerlockchange', this.onPointerLockChanged, false);
+        document.removeEventListener('pointerlockerror', this.onPointerLockError, false);
+        window.removeEventListener('click', this.onMouseClickWithoutLock, false);
+        this.domElement.removeEventListener('contextmenu', this.contextMenu, false);
         this.domElement.removeEventListener('mousemove', this.onMouseMove, false);
         window.removeEventListener('keydown', this.onKeyDown, false);
         window.removeEventListener('keyup', this.onKeyUp, false);
@@ -218,5 +220,25 @@ export class Control {
 
     isMoving() {
         return this.moveForward || this.moveLeft || this.moveRight || this.moveBackward;
+    }
+
+    serialize() {
+        const o = {};
+        if (this.moveForward) {
+            o.moveForward = true;
+        }
+        if (this.moveLeft) {
+            o.moveLeft = true;
+        }
+        if (this.moveRight) {
+            o.moveRight = true;
+        }
+        if (this.moveBackward) {
+            o.moveBackward = true;
+        }
+        if (this.fastMovement) {
+            o.fastMovement = true;
+        }
+        return "MOVE" + JSON.stringify(o);
     }
 }

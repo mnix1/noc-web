@@ -5,7 +5,7 @@ export default class CommunicationWebSocket {
         const socket = new WebSocket("ws://localhost:8080/websocket");
         // const socket = new WebSocket(((window.location.protocol === "https:") ? "wss://" : "ws://") + window.location.host + "/websocket");
         socket.addEventListener('message', (e) => {
-            console.log('onmessage', e, e.data);
+            // console.log('onmessage', e, e.data);
             if (e.data === 'BATTLE_PREPARING') {
                 this.dispatch(battleStatusChanged(BATTLE_STATUS_PREPARING));
             } else if (e.data === 'BATTLE_IN_PROGRESS') {

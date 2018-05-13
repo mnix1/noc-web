@@ -8,8 +8,8 @@ import base from '../../content/fbx/albertHoop/base.fbx';
 import Champion from "./Champion";
 
 export default class AlbertHoopChampion extends Champion {
-    constructor(onLoad) {
-        super(onLoad, base, {
+    constructor() {
+        super(base, {
             idle,
             walk,
             walkBack,

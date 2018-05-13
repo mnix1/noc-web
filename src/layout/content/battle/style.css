@@ -1,12 +1,20 @@
 :local .container {
 }
 
+:local .preparing {
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(100, 100, 100, 0.4);
+  color: red;
+  font-size: 80px;
+  text-align: center;
+}
+
 :local .content {
 
 }
 
 canvas {
-  //cursor: none;
-  display: block;
-  background:linear-gradient(#00ADFF 0%,#eee 100%);
+//cursor: none; display: block; background: linear-gradient(#00ADFF 0%, #eee 100%);
 }

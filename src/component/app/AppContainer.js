@@ -1,12 +1,12 @@
 import {connect} from 'react-redux'
 import {socketCreated} from "../../redux/reducer/socket";
 import App from "./App";
-import {BATTLE_STATUS_IN_PROGRESS} from "../../redux/reducer/battle";
+import {BATTLE_STATUS_IN_PROGRESS, BATTLE_STATUS_PREPARING} from "../../redux/reducer/battle";
 
 const mapStateToProps = (state) => {
     const {battleStatus} = state.battle;
     return {
-        isBattleInProgress: battleStatus === BATTLE_STATUS_IN_PROGRESS
+        isBattleInProgress: battleStatus === BATTLE_STATUS_PREPARING || battleStatus === BATTLE_STATUS_IN_PROGRESS
     };
 };
 

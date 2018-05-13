@@ -5,7 +5,6 @@ import {
     BATTLE_STATUS_SEARCHING_OPPONENT
 } from "../../../redux/reducer/battle";
 import Battle from "../../../battle/Battle";
-import BattleWebSocket from "../../../battle/BattleWebSocket";
 
 let battle;
 
@@ -22,7 +21,7 @@ export default class BattlePage extends React.Component {
         this.battleInit();
     }
 
-    autoStart(){
+    autoStart() {
         const {battleStatus} = this.props;
         if (battleStatus === undefined) {
             setTimeout(() => {
@@ -33,9 +32,8 @@ export default class BattlePage extends React.Component {
 
     battleInit() {
         const {socket, battleStatus} = this.props;
-        if (battleStatus === BATTLE_STATUS_IN_PROGRESS && battle === undefined) {
-            battle = new Battle(CONTAINER, 32);
-            new BattleWebSocket(socket, battle);
+        if (battleStatus === BATTLE_STATUS_PREPARING && battle === undefined) {
+            battle = new Battle(CONTAINER, 32, socket);
             battle.animate();
         }
     }
@@ -60,13 +58,11 @@ export default class BattlePage extends React.Component {
     }
 
     renderPreparing() {
+        const {battleStatus} = this.props;
         return <div>
-            <div>Preparing</div>
-        </div>
-    }
-
-    renderInProgress() {
-        return <div id={CONTAINER}/>;
+            {battleStatus === BATTLE_STATUS_PREPARING && <div className={styles.preparing}>PREPARING</div>}
+            <div id={CONTAINER}/>
+        </div>;
     }
 
     render() {
@@ -74,11 +70,8 @@ export default class BattlePage extends React.Component {
         if (battleStatus === BATTLE_STATUS_SEARCHING_OPPONENT) {
             return this.renderSearchingOpponent();
         }
-        if (battleStatus === BATTLE_STATUS_PREPARING) {
+        if (battleStatus === BATTLE_STATUS_PREPARING || battleStatus === BATTLE_STATUS_IN_PROGRESS) {
             return this.renderPreparing();
-        }
-        if (battleStatus === BATTLE_STATUS_IN_PROGRESS) {
-            return this.renderInProgress();
         }
         return (
             <div className={styles.container}>
