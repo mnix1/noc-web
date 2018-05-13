@@ -17,13 +17,14 @@ export default class Battle {
         this.scene = new THREE.Scene();
         this.worldRadius = worldRadius;
         this.animations = [];
+        this.champions = [];
         this.initRenderer(container);
         this.initField();
         // const axes = new THREE.AxesHelper(20);
         // this.scene.add(axes);
         this.initCamera();
         this.initLight();
-        this.initChampions();
+        // this.initChampions();
     }
 
     initRenderer(container) {
@@ -58,34 +59,41 @@ export default class Battle {
     }
 
     initChampions() {
-        this.champions = [];
         this.myChampion = new TommyBrookChampion((champion) => {
             this.initChampion(champion);
-            this.myChampion = champion;
-            this.initChampionControl(this.myChampion);
+            this.initChampionControl(champion);
         });
-        this.otherChampions = [new AlbertHoopChampion((champion) => {
+        this.otherChampion = new AlbertHoopChampion((champion) => {
             this.initChampion(champion);
             // this.initChampionControl(this.myChampion);
-        })];
+        });
+        // this.otherChampions = [];
     }
 
-    initChampion(champion) {
+    initMyChampion(championClass, props) {
+        this.myChampion = new championClass((champion) => {
+            this.initChampion(champion, props);
+            this.initChampionControl(champion);
+        })
+    }
+
+    initOtherChampion(championClass, props) {
+        this.otherChampion = new championClass((champion) => {
+            this.initChampion(champion, props);
+        })
+    }
+
+    initChampion(champion, props) {
         champion.correctSize();
         this.scene.add(champion.mesh);
         champion.playAnimation('idle');
         this.champions.push(champion);
-        this.placeChampion(champion);
+        this.placeChampion(champion, props);
     }
 
-    placeChampion(champion) {
-        if (this.champions.length === 1) {
-            champion.mesh.position.set(0, 0, -this.worldRadius * 18 / 20);
-            // champion.mesh.rotation.y = Math.PI;
-        } else {
-            champion.mesh.position.set(0, 0, this.worldRadius * 18 / 20);
-            // champion.mesh.rotation.y = 0;
-        }
+    placeChampion(champion, props) {
+        champion.mesh.position.set(props.px, props.py, props.pz);
+        champion.mesh.rotation.set(props.rx, props.ry, props.rz);
     }
 
     initChampionControl(champion) {

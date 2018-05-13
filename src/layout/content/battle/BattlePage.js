@@ -5,6 +5,7 @@ import {
     BATTLE_STATUS_SEARCHING_OPPONENT
 } from "../../../redux/reducer/battle";
 import Battle from "../../../battle/Battle";
+import BattleWebSocket from "../../../battle/BattleWebSocket";
 
 let battle;
 
@@ -21,9 +22,10 @@ export default class BattlePage extends React.Component {
     }
 
     battleInit() {
-        const {battleStatus} = this.props;
+        const {socket, battleStatus} = this.props;
         if (battleStatus === BATTLE_STATUS_IN_PROGRESS && battle === undefined) {
             battle = new Battle(CONTAINER, 32);
+            new BattleWebSocket(socket, battle);
             battle.animate();
         }
     }
