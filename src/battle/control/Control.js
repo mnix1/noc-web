@@ -1,9 +1,8 @@
 import * as THREE from 'three';
-import _ from 'lodash';
 
 export class Control {
 
-    constructor(object, domElement) {
+    constructor(object, domElement, startPosition) {
         // this.object = new ControlObject(object);
         this.object = object;
         this.target = new THREE.Vector3(0, 0, 0);
@@ -36,7 +35,7 @@ export class Control {
         this.mouseY = 0;
 
         this.lat = 0;
-        this.lon = 0;
+        this.lon = startPosition === undefined ? 0 : startPosition;
         this.phi = 0;
         this.theta = 0;
 
@@ -154,6 +153,8 @@ export class Control {
             case 16: /*SHIFT*/
                 this.fastMovement = true;
                 break;
+            default:
+                return;
         }
     };
 
@@ -188,6 +189,8 @@ export class Control {
             case 16: /*SHIFT*/
                 this.fastMovement = false;
                 break;
+            default:
+                return;
         }
     };
 

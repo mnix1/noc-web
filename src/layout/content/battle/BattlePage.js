@@ -15,10 +15,20 @@ export default class BattlePage extends React.Component {
 
     componentDidMount() {
         this.battleInit();
+        this.autoStart();
     }
 
     componentDidUpdate() {
         this.battleInit();
+    }
+
+    autoStart(){
+        const {battleStatus} = this.props;
+        if (battleStatus === undefined) {
+            setTimeout(() => {
+                this.battleStart();
+            }, Math.random() * 1000 + 1000);
+        }
     }
 
     battleInit() {
@@ -32,14 +42,14 @@ export default class BattlePage extends React.Component {
 
     battleStart = () => {
         const {socket, onStartBattle: onBattleStart} = this.props;
-        socket.send('BATTLE_START');
         onBattleStart();
+        socket.send('BATTLE_START');
     };
 
     battleCancel = () => {
         const {socket, onCancelBattle: onBattleCancel} = this.props;
-        socket.send('BATTLE_CANCEL');
         onBattleCancel();
+        socket.send('BATTLE_CANCEL');
     };
 
     renderSearchingOpponent() {

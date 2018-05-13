@@ -1,12 +1,5 @@
 import * as THREE from 'three';
 import FBXLoader from "../../loader/FBXLoader";
-import monkWalk from '../../content/fbx/tommyBrook/walk.fbx';
-import monkWalkBack from '../../content/fbx/tommyBrook/walkBack.fbx';
-import monkWalkRight from '../../content/fbx/tommyBrook/walkRight.fbx';
-import monkWalkLeft from '../../content/fbx/tommyBrook/walkLeft.fbx';
-import monkIdle from '../../content/fbx/tommyBrook/idle.fbx';
-import monkRun from '../../content/fbx/tommyBrook/run.fbx';
-import monk from '../../content/fbx/tommyBrook/base.fbx';
 import _ from 'lodash';
 
 export default class Champion {

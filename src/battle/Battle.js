@@ -73,7 +73,7 @@ export default class Battle {
     initMyChampion(championClass, props) {
         this.myChampion = new championClass((champion) => {
             this.initChampion(champion, props);
-            this.initChampionControl(champion);
+            this.initChampionControl(champion, props);
         })
     }
 
@@ -96,7 +96,7 @@ export default class Battle {
         champion.mesh.rotation.set(props.rx, props.ry, props.rz);
     }
 
-    initChampionControl(champion) {
+    initChampionControl(champion, props) {
         const startPosition = this.camera.position.clone();
         const championPosition = champion.mesh.position;
         const endPosition = new THREE.Vector3(championPosition.x, 4, championPosition.z - 4);
@@ -113,8 +113,7 @@ export default class Battle {
             }
             return {ended: timer >= duration};
         });
-        // this.controls = new Control([this.myChampion.mesh, this.camera]);
-        this.controls = new Control(this.myChampion.mesh, this.renderer.domElement);
+        this.controls = new Control(this.myChampion.mesh, this.renderer.domElement, THREE.Math.radToDeg(props.ry) + 90);
     }
 
     updateAnimations(delta) {
