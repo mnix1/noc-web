@@ -217,9 +217,9 @@ export class Control {
         position.sub(this.target);
         position.add(this.object.position);
         position.normalize();
-        position.multiplyScalar(2);
+        position.multiplyScalar(1.5);
         position.add(this.object.position);
-        position.add(new THREE.Vector3(0, this.box.max.y, 0));
+        position.add(new THREE.Vector3(0, this.box.max.y*1.05, 0));
         return position;
     }
 

@@ -80,17 +80,18 @@ export default class BattleWorld {
 
     initControl(champion, props) {
         this.control = new Control(this.myChampion.mesh, this.renderer.domElement, THREE.Math.radToDeg(props.ry) + 90);
+        this.control.update(0);
         const startPosition = this.camera.position.clone();
         const endPosition = this.control.prepareCameraPosition();
         const targetStartPosition = new THREE.Vector3(0, 0, 0);
         const targetEndPosition = this.control.target;
-        const duration = 1;
+        const duration = 4;
         let timer = 0;
         const newPositionElement = (property) => startPosition[property] + (endPosition[property] - startPosition[property]) * timer / duration;
         const newTargetPositionElement = (property) => targetStartPosition[property] + (targetEndPosition[property] - targetStartPosition[property]) * timer / duration;
         this.animations.push((delta) => {
-            const ended = timer >= duration;
             timer += delta;
+            const ended = timer >= duration;
             const newActualPosition = ended ? endPosition : new THREE.Vector3(newPositionElement('x'), newPositionElement('y'), newPositionElement('z'));
             const newTargetActualPosition = ended ? targetEndPosition : new THREE.Vector3(newTargetPositionElement('x'), newTargetPositionElement('y'), newTargetPositionElement('z'));
             this.camera.position.set(newActualPosition.x, newActualPosition.y, newActualPosition.z);
