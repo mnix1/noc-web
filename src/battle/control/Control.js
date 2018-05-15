@@ -9,8 +9,6 @@ export class Control {
 
         this.domElement = domElement || document;
 
-        this.enabled = true;
-
         this.box = new THREE.Box3().setFromObject(object);
 
         this.walkSpeed = 2.0;
@@ -85,7 +83,6 @@ export class Control {
     };
 
     update(delta) {
-        if (this.enabled === false) return;
         if (this.heightSpeed) {
             const y = THREE.Math.clamp(this.object.position.y, this.heightMin, this.heightMax);
             const heightDelta = y - this.heightMin;
@@ -132,6 +129,7 @@ export class Control {
     };
 
     onKeyDown = (event) => {
+        console.log('keyCode', event.keyCode);
         switch (event.keyCode) {
             case 38: /*up*/
             case 87: /*W*/
@@ -151,6 +149,9 @@ export class Control {
                 break;
             case 16: /*SHIFT*/
                 this.moveChange('sprint', true);
+                break;
+            case 66: /*B*/
+                this.moveChange('dance', true);
                 break;
             default:
                 return;
@@ -177,6 +178,9 @@ export class Control {
                 break;
             case 16: /*SHIFT*/
                 this.moveChange('sprint', false);
+                break;
+            case 66: /*B*/
+                this.moveChange('dance', false);
                 break;
             default:
                 return;
@@ -249,6 +253,9 @@ export class Control {
         }
         if (this.sprint) {
             o.sprint = true;
+        }
+        if (this.dance) {
+            o.dance = true;
         }
         return "MOVE" + JSON.stringify(o);
     }

@@ -5,6 +5,7 @@ import walkLeft from '../../content/fbx/albertHoop/walkLeft.fbx';
 import idle from '../../content/fbx/albertHoop/idle.fbx';
 import run from '../../content/fbx/albertHoop/run.fbx';
 import base from '../../content/fbx/albertHoop/base.fbx';
+import dance from '../../content/fbx/albertHoop/dance.fbx';
 import Champion from "./Champion";
 
 export default class AlbertHoopChampion extends Champion {
@@ -15,7 +16,8 @@ export default class AlbertHoopChampion extends Champion {
             walkBack,
             walkRight,
             walkLeft,
-            run
+            run,
+            dance,
         })
     }
 }

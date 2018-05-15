@@ -5,6 +5,7 @@ import walkLeft from '../../content/fbx/tommyBrook/walkLeft.fbx';
 import idle from '../../content/fbx/tommyBrook/idle.fbx';
 import run from '../../content/fbx/tommyBrook/run.fbx';
 import base from '../../content/fbx/tommyBrook/base.fbx';
+import dance from '../../content/fbx/tommyBrook/dance.fbx';
 import Champion from "./Champion";
 
 export default class TommyBrookChampion extends Champion {
@@ -15,7 +16,8 @@ export default class TommyBrookChampion extends Champion {
             walkBack,
             walkRight,
             walkLeft,
-            run
+            run,
+            dance,
         })
     }
 }

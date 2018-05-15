@@ -133,9 +133,10 @@ export default class BattleWorld {
                     this.myChampion.stopAllAndPlayAnimation('walkRight');
                 } else if (this.control.moveLeft) {
                     this.myChampion.stopAllAndPlayAnimation('walkLeft');
-                } else {
 
                 }
+            } else if (this.control.dance) {
+                this.myChampion.stopAllAndPlayAnimation('dance');
             } else {
                 this.myChampion.stopAllAndPlayAnimation('idle');
             }
