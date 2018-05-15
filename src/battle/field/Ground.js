@@ -108,7 +108,7 @@ export default class Ground {
             group.children[g].position.x = p[0];
             group.children[g].position.z = p[1];
             group.children[g].rotation.y = this.randNum(0, 360, true) * Math.PI / 180;
-            const scalar = this.randNum(.92, 1, false);
+            const scalar = this.randNum(.4, .5, false);
             group.children[g].scale.set(scalar, scalar, scalar);
         }
         return group;

@@ -1,10 +1,6 @@
 import * as THREE from 'three';
 import Field from "./field/Field";
-import TommyBrookChampion from "./champion/TommyBrookChampion";
 import {Control} from "./control/Control";
-import {Stats} from "three-stats";
-import AlbertHoopChampion from "./champion/AlbertHoopChampion";
-import BattleCommunication from "./BattleCommunication";
 import {getChampionById} from "./champion/ChampionHelper";
 
 export default class BattleWorld {
@@ -40,7 +36,7 @@ export default class BattleWorld {
 
     initCamera() {
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
-        this.camera.position.set(0, 50, 0);
+        this.camera.position.set(0, this.worldRadius, 0);
         this.camera.lookAt(new THREE.Vector3(0, 0, 0));
     }
 
@@ -88,7 +84,7 @@ export default class BattleWorld {
         const endPosition = this.control.prepareCameraPosition();
         const targetStartPosition = new THREE.Vector3(0, 0, 0);
         const targetEndPosition = this.control.target;
-        const duration = 5;
+        const duration = 1;
         let timer = 0;
         const newPositionElement = (property) => startPosition[property] + (endPosition[property] - startPosition[property]) * timer / duration;
         const newTargetPositionElement = (property) => targetStartPosition[property] + (targetEndPosition[property] - targetStartPosition[property]) * timer / duration;
@@ -125,7 +121,7 @@ export default class BattleWorld {
         if (this.control && this.controlReady) {
             if (this.control.isMoving()) {
                 if (this.control.moveForward) {
-                    if (this.control.fastMovement) {
+                    if (this.control.sprint) {
                         this.myChampion.stopAllAndPlayAnimation('run');
                     } else {
                         this.myChampion.stopAllAndPlayAnimation('walk');

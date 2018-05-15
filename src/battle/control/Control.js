@@ -11,12 +11,14 @@ export class Control {
 
         this.enabled = true;
 
-        this.movementSpeed = 2.0;
-        this.fastMoveementSpeed = 8.0;
+        this.box = new THREE.Box3().setFromObject(object);
+
+        this.walkSpeed = 2.0;
+        this.sprintSpeed = 8.0;
         this.lookSpeed = 0.1;
 
         this.lookVertical = false;
-        this.fastMovement = false;
+        this.sprint = false;
 
         this.activeLook = true;
 
@@ -91,11 +93,11 @@ export class Control {
         } else {
             this.autoSpeedFactor = 0.0;
         }
-        const actualMoveSpeed = delta * (this.fastMovement ? this.fastMoveementSpeed : this.movementSpeed);
-        if (this.moveForward) this.object.translateZ((actualMoveSpeed + this.autoSpeedFactor));
-        if (this.moveBackward) this.object.translateZ(-actualMoveSpeed);
-        if (this.moveLeft) this.object.translateX(actualMoveSpeed);
-        if (this.moveRight) this.object.translateX(-actualMoveSpeed);
+        const actualMoveSpeed = delta * (this.sprint ? this.sprintSpeed : this.walkSpeed);
+        // if (this.moveForward) this.object.translateZ((actualMoveSpeed + this.autoSpeedFactor));
+        // if (this.moveBackward) this.object.translateZ(-actualMoveSpeed);
+        // if (this.moveLeft) this.object.translateX(actualMoveSpeed);
+        // if (this.moveRight) this.object.translateX(-actualMoveSpeed);
         let actualLookSpeed = delta * this.lookSpeed;
         if (!this.activeLook) {
             actualLookSpeed = 0;
@@ -118,7 +120,10 @@ export class Control {
         targetPosition.y = position.y + 100 * Math.cos(this.phi);
         targetPosition.z = position.z + 100 * Math.sin(this.phi) * Math.sin(this.theta);
         this.object.lookAt(targetPosition);
-        this.mouseX = 0;
+        if (this.mouseX !== 0) {
+            this.mouseX = 0;
+            this.handleMoveChanged();
+        }
     };
 
     onMouseMove = (event) => {
@@ -145,7 +150,7 @@ export class Control {
                 this.moveChange('moveRight', true);
                 break;
             case 16: /*SHIFT*/
-                this.moveChange('fastMovement', true);
+                this.moveChange('sprint', true);
                 break;
             default:
                 return;
@@ -171,7 +176,7 @@ export class Control {
                 this.moveChange('moveRight', false);
                 break;
             case 16: /*SHIFT*/
-                this.moveChange('fastMovement', false);
+                this.moveChange('sprint', false);
                 break;
             default:
                 return;
@@ -214,7 +219,7 @@ export class Control {
         position.normalize();
         position.multiplyScalar(2);
         position.add(this.object.position);
-        position.add(new THREE.Vector3(0, 4, 0));
+        position.add(new THREE.Vector3(0, this.box.max.y, 0));
         return position;
     }
 
@@ -222,8 +227,14 @@ export class Control {
         return this.moveForward || this.moveLeft || this.moveRight || this.moveBackward;
     }
 
-    serialize() {
-        const o = {};
+    serialize = () => {
+        const rotation = this.object.rotation;
+        // const o = {rx: rotation.x, ry: rotation.y, rz: rotation.z};
+        const o = {
+            rx: Math.round(rotation.x * 1000),
+            ry: Math.round(rotation.y * 1000),
+            rz: Math.round(rotation.z * 1000)
+        };
         if (this.moveForward) {
             o.moveForward = true;
         }
@@ -236,8 +247,8 @@ export class Control {
         if (this.moveBackward) {
             o.moveBackward = true;
         }
-        if (this.fastMovement) {
-            o.fastMovement = true;
+        if (this.sprint) {
+            o.sprint = true;
         }
         return "MOVE" + JSON.stringify(o);
     }

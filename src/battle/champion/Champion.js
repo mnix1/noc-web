@@ -12,8 +12,16 @@ export default class Champion {
 
     correctSize() {
         // this.mesh.rotation.y = Math.PI / 2;
-        this.mesh.scale.set(0.02, 0.02, 0.02);
+        // this.mesh.scale.set(0.009, 0.009, 0.009);
+        // const scalar = 0.02;
+        const scalar = 0.009;
+        this.mesh.scale.set(scalar, scalar, scalar);
+        // this.box = new THREE.Box3().setFromObject( this.mesh );
     }
+
+    // get height(){
+    //     return this.box.max.y;
+    // }
 
     playAnimation(key) {
         if (!this.actions[key]) {
