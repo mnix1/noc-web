@@ -25,7 +25,7 @@ export default class Battle {
         }).then(() => {
             this.communication.ready();
         });
-        this.world.onMoveChanged = (control) => {
+        this.world.onControlChanged = (control) => {
             this.communication.send(control.serialize());
         }
     }
@@ -33,7 +33,7 @@ export default class Battle {
     update(battleState) {
         const myChampionProps = battleState.my.find(e => e.t === 'CHAMPION');
         const otherChampionProps = battleState.other.find(e => e.t === 'CHAMPION');
-        this.world.placeChampion(this.world.myChampion, myChampionProps);
+        // this.world.placeChampion(this.world.myChampion, myChampionProps);
         this.world.placeChampion(this.world.otherChampion, otherChampionProps);
         this.world.otherChampion.stopAllAndPlayAnimation(otherChampionProps.a);
     }

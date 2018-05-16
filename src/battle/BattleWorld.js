@@ -79,7 +79,7 @@ export default class BattleWorld {
     }
 
     initControl(champion, props) {
-        this.control = new Control(this.myChampion.mesh, this.renderer.domElement, THREE.Math.radToDeg(props.ry) + 90);
+        this.control = new Control(this.myChampion, this.renderer.domElement, THREE.Math.radToDeg(props.ry) + 90);
         this.control.update(0);
         const startPosition = this.camera.position.clone();
         const endPosition = this.control.prepareCameraPosition();
@@ -98,13 +98,13 @@ export default class BattleWorld {
             this.camera.lookAt(newTargetActualPosition);
             if (ended) {
                 this.controlReady = true;
-                this.control.addMoveChangedListener(this.onMoveChanged);
+                this.control.addChangeListener(this.onControlChanged);
             }
             return {ended};
         });
     }
 
-    onMoveChanged = (control) => {
+    onControlChanged = (control) => {
     };
 
     updateAnimations(delta) {
@@ -120,26 +120,6 @@ export default class BattleWorld {
 
     updateControls(delta) {
         if (this.control && this.controlReady) {
-            if (this.control.isMoving()) {
-                if (this.control.moveForward) {
-                    if (this.control.sprint) {
-                        this.myChampion.stopAllAndPlayAnimation('run');
-                    } else {
-                        this.myChampion.stopAllAndPlayAnimation('walk');
-                    }
-                } else if (this.control.moveBackward) {
-                    this.myChampion.stopAllAndPlayAnimation('walkBack');
-                } else if (this.control.moveRight) {
-                    this.myChampion.stopAllAndPlayAnimation('walkRight');
-                } else if (this.control.moveLeft) {
-                    this.myChampion.stopAllAndPlayAnimation('walkLeft');
-
-                }
-            } else if (this.control.dance) {
-                this.myChampion.stopAllAndPlayAnimation('dance');
-            } else {
-                this.myChampion.stopAllAndPlayAnimation('idle');
-            }
             this.control.update(delta);
             const newCameraPosition = this.control.prepareCameraPosition();
             this.camera.position.set(newCameraPosition.x, newCameraPosition.y, newCameraPosition.z);
