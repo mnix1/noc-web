@@ -94,7 +94,7 @@ let FBXLoader;
 
             }
 
-            // console.log( FBXTree );
+            // // console.log( FBXTree );
 
             let connections = parseConnections(FBXTree);
             let images = parseImages(FBXTree);
@@ -246,7 +246,7 @@ let FBXLoader;
             case 'tga':
                 // if (typeof THREE.TGALoader !== 'function') {
                 //
-                //     console.warn('FBXLoader: THREE.TGALoader is required to load TGA textures');
+                //     // console.warn('FBXLoader: THREE.TGALoader is required to load TGA textures');
                 //     return;
                 //
                 // } else {
@@ -263,7 +263,7 @@ let FBXLoader;
                 // }
                 break;
             default:
-                console.warn('FBXLoader: Image type "' + extension + '" is not supported.');
+                // // console.warn('FBXLoader: Image type "' + extension + '" is not supported.');
                 return;
 
         }
@@ -432,7 +432,7 @@ let FBXLoader;
                 material = new THREE.MeshLambertMaterial();
                 break;
             default:
-                console.warn('FBXLoader: unknown material type "%s". Defaulting to MeshPhongMaterial.', type);
+                // console.warn('FBXLoader: unknown material type "%s". Defaulting to MeshPhongMaterial.', type);
                 material = new THREE.MeshPhongMaterial({color: 0x3300ff});
                 break;
 
@@ -563,7 +563,7 @@ let FBXLoader;
                 case 'SpecularFactor': // AKA specularLevel
                 case 'VectorDisplacementColor': // NOTE: Seems to be a copy of DisplacementColor
                 default:
-                    console.warn('FBXLoader: %s map is not supported in three.js, skipping texture.', type);
+                    // console.warn('FBXLoader: %s map is not supported in three.js, skipping texture.', type);
                     break;
 
             }
@@ -580,7 +580,7 @@ let FBXLoader;
         // if the texture is a layered texture, just use the first layer and issue a warning
         if ('LayeredTexture' in FBXTree.Objects && id in FBXTree.Objects.LayeredTexture) {
 
-            console.warn('FBXLoader: layered textures are not supported in three.js. Discarding all but first layer.');
+            // console.warn('FBXLoader: layered textures are not supported in three.js. Discarding all but first layer.');
             id = connections.get(id).children[0].ID;
 
         }
@@ -612,7 +612,7 @@ let FBXLoader;
                     let skeleton = parseSkeleton(relationships, DeformerNodes);
                     skeleton.ID = nodeID;
 
-                    if (relationships.parents.length > 1) console.warn('FBXLoader: skeleton attached to more than one geometry is not supported.');
+                    if (relationships.parents.length > 1) // console.warn('FBXLoader: skeleton attached to more than one geometry is not supported.');
                     skeleton.geometryID = relationships.parents[0].ID;
 
                     skeletons[nodeID] = skeleton;
@@ -626,7 +626,7 @@ let FBXLoader;
                     morphTarget.rawTargets = parseMorphTargets(relationships, deformerNode, DeformerNodes, connections, FBXTree);
                     morphTarget.id = nodeID;
 
-                    if (relationships.parents.length > 1) console.warn('FBXLoader: morph target attached to more than one geometry is not supported.');
+                    if (relationships.parents.length > 1) // console.warn('FBXLoader: morph target attached to more than one geometry is not supported.');
                     morphTarget.parentGeoID = relationships.parents[0].ID;
 
                     morphTargets[nodeID] = morphTarget;
@@ -699,7 +699,7 @@ let FBXLoader;
 
             if (i === 8) {
 
-                console.warn('FBXLoader: maximum of 8 morph targets supported. Ignoring additional targets.');
+                // console.warn('FBXLoader: maximum of 8 morph targets supported. Ignoring additional targets.');
 
                 break;
 
@@ -1100,7 +1100,7 @@ let FBXLoader;
 
                     if (!displayedWeightsWarning) {
 
-                        console.warn('FBXLoader: Vertex has more than 4 skinning weights assigned to vertex. Deleting additional weights.');
+                        // console.warn('FBXLoader: Vertex has more than 4 skinning weights assigned to vertex. Deleting additional weights.');
                         displayedWeightsWarning = true;
 
                     }
@@ -1530,7 +1530,7 @@ let FBXLoader;
                 index = infoObject.indices[0];
                 break;
             default :
-                console.warn('FBXLoader: unknown attribute mapping type ' + infoObject.mappingType);
+                // console.warn('FBXLoader: unknown attribute mapping type ' + infoObject.mappingType);
 
         }
 
@@ -1548,7 +1548,7 @@ let FBXLoader;
 
         // if (NURBSCurve === undefined) {
         //
-        //     console.error('FBXLoader: The loader relies on THREE.NURBSCurve for any nurbs present in the model. Nurbs will show up as empty geometry.');
+        //     // console.error('FBXLoader: The loader relies on THREE.NURBSCurve for any nurbs present in the model. Nurbs will show up as empty geometry.');
         //     return new THREE.BufferGeometry();
         //
         // }
@@ -1557,7 +1557,7 @@ let FBXLoader;
         //
         // if (isNaN(order)) {
         //
-        //     console.error('FBXLoader: Invalid Order %s given for geometry ID: %s', geoNode.Order, geoNode.id);
+        //     // console.error('FBXLoader: Invalid Order %s given for geometry ID: %s', geoNode.Order, geoNode.id);
         //     return new THREE.BufferGeometry();
         //
         // }
@@ -1821,7 +1821,7 @@ let FBXLoader;
                     break;
 
                 default:
-                    console.warn('FBXLoader: Unknown camera type ' + type + '.');
+                    // console.warn('FBXLoader: Unknown camera type ' + type + '.');
                     model = new THREE.Object3D();
                     break;
 
@@ -1939,7 +1939,7 @@ let FBXLoader;
                     break;
 
                 default:
-                    console.warn('FBXLoader: Unknown light type ' + lightAttribute.LightType.value + ', defaulting to a THREE.PointLight.');
+                    // console.warn('FBXLoader: Unknown light type ' + lightAttribute.LightType.value + ', defaulting to a THREE.PointLight.');
                     model = new THREE.PointLight(color, intensity);
                     break;
 
@@ -2107,15 +2107,15 @@ let FBXLoader;
         // http://help.autodesk.com/view/FBX/2017/ENU/?guid=__cpp_ref_class_fbx_euler_html
         if ('RotationOrder' in modelNode) {
 
-            let enums = [
-                'XYZ', // default
-                'XZY',
-                'YZX',
-                'ZXY',
-                'YXZ',
-                'ZYX',
-                'SphericXYZ',
-            ];
+            // let enums = [
+            //     'XYZ', // default
+            //     'XZY',
+            //     'YZX',
+            //     'ZXY',
+            //     'YXZ',
+            //     'ZYX',
+            //     'SphericXYZ',
+            // ];
 
             let value = parseInt(modelNode.RotationOrder.value, 10);
 
@@ -2124,11 +2124,11 @@ let FBXLoader;
                 // model.rotation.order = enums[ value ];
 
                 // Note: Euler order other than XYZ is currently not supported, so just display a warning for now
-                console.warn('FBXLoader: unsupported Euler Order: %s. Currently only XYZ order is supported. Animations and rotations may be incorrect.', enums[value]);
+                // console.warn('FBXLoader: unsupported Euler Order: %s. Currently only XYZ order is supported. Animations and rotations may be incorrect.', enums[value]);
 
             } else if (value === 6) {
 
-                console.warn('FBXLoader: unsupported Euler Order: Spherical XYZ. Animations and rotations may be incorrect.');
+                // console.warn('FBXLoader: unsupported Euler Order: Spherical XYZ. Animations and rotations may be incorrect.');
 
             }
 
@@ -2437,7 +2437,7 @@ let FBXLoader;
 
                 // it seems like stacks will always be associated with a single layer. But just in case there are files
                 // where there are multiple layers per stack, we'll display a warning
-                console.warn('FBXLoader: Encountered an animation stack with multiple layers, this is currently not supported. Ignoring subsequent layers.');
+                // console.warn('FBXLoader: Encountered an animation stack with multiple layers, this is currently not supported. Ignoring subsequent layers.');
 
             }
 
@@ -3065,7 +3065,7 @@ let FBXLoader;
 
             let version = reader.getUint32();
 
-            console.log('FBXLoader: FBX binary version: ' + version);
+            // console.log('FBXLoader: FBX binary version: ' + version);
 
             let allNodes = new FBXTree();
 
@@ -3335,7 +3335,7 @@ let FBXLoader;
 
                     // if (window.Zlib === undefined) {
                     //
-                    //     console.error('FBXLoader: External library Inflate.min.js required, obtain or import from https://github.com/imaya/zlib.js');
+                    //     // console.error('FBXLoader: External library Inflate.min.js required, obtain or import from https://github.com/imaya/zlib.js');
                     //
                     // }
                     const input = new Uint8Array(reader.getArrayBuffer(compressedLength));

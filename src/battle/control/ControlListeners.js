@@ -27,7 +27,7 @@ export class ControlListeners {
     };
 
     onPointerLockError = (e) => {
-        console.log('onPointerLockError', e);
+        console.error('onPointerLockError', e);
     };
 
     onMouseClickWithoutLock = () => {

@@ -26,7 +26,7 @@ export default class Content extends React.Component {
     }
 
     renderPage() {
-        console.log('Content', this.pageProps);
+        // console.log('Content', this.pageProps);
         return React.createElement(getPageComponent(this.props.page), this.pageProps);
     }
 

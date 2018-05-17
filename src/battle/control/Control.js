@@ -85,9 +85,10 @@ export class Control {
         }
         const targetPosition = this.target,
             position = this.object.position;
-        targetPosition.x = position.x + 100 * Math.sin(this.phi) * Math.cos(this.theta);
-        targetPosition.y = position.y + 100 * Math.cos(this.phi);
-        targetPosition.z = position.z + 100 * Math.sin(this.phi) * Math.sin(this.theta);
+        const targetDistance = 10;
+        targetPosition.x = position.x + targetDistance * Math.sin(this.phi) * Math.cos(this.theta);
+        targetPosition.y = position.y + targetDistance * Math.cos(this.phi);
+        targetPosition.z = position.z + targetDistance * Math.sin(this.phi) * Math.sin(this.theta);
         this.object.lookAt(targetPosition);
         this.clearPointer();
     };

@@ -24,7 +24,7 @@ const DeckPageContainer = createFragmentContainer(
 
 
 const mapStateToProps = (state, props) => {
-    console.log('DeckPageContainer', props)
+    // console.log('DeckPageContainer', props)
     return {
         // decks:
     }

@@ -27,7 +27,7 @@ export default class CommunicationWebSocket {
             console.log('onerror', e);
         });
         socket.addEventListener('open', (e) => {
-            console.log('onopen', e)
+            // console.log('onopen', e)
         });
         this.socket = socket;
     }

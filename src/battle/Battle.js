@@ -1,8 +1,7 @@
 import * as THREE from 'three';
 import BattleCommunication from "./BattleCommunication";
 import BattleWorld from "./BattleWorld";
-import BattleObjects from "./BattleObjects";
-import {getChampionById} from "./champion/ChampionHelper";
+window.THREE = THREE;
 
 // const stats = new Stats();
 // stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
@@ -31,7 +30,7 @@ export default class Battle {
     }
 
     update(battleState) {
-        const myChampionProps = battleState.my.find(e => e.t === 'CHAMPION');
+        // const myChampionProps = battleState.my.find(e => e.t === 'CHAMPION');
         const otherChampionProps = battleState.other.find(e => e.t === 'CHAMPION');
         // this.world.placeChampion(this.world.myChampion, myChampionProps);
         this.world.placeChampion(this.world.otherChampion, otherChampionProps);

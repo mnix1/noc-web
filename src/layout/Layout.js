@@ -7,7 +7,7 @@ import TopMenuContainer from "./topMenu/TopMenuContainer";
 export default class Layout extends React.Component {
 
     render() {
-        console.log('Layout render', this.props);
+        // console.log('Layout render', this.props);
         return (
             <div className={styles.container}>
                 <TopMenuContainer/>

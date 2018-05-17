@@ -27,7 +27,7 @@ fetch('/profile', {credentials: 'include'})
         </Provider>, document.getElementById('root'));
     })
     .catch(e => {
-        console.log(e);
+        console.error(e);
         ReactDOM.render(<div>Error</div>, document.getElementById('root'));
     });
 

@@ -31,7 +31,7 @@ export default class DeckPage extends React.Component {
     }
 
     render() {
-        console.log('DeckPage', this.props)
+        // console.log('DeckPage', this.props)
         return (
             <div className={styles.container}>
                 {this.props.decks.map(e => this.renderDeck(e))}

@@ -1,10 +1,10 @@
-import * as THREE from 'three';
-import Field from "./field/Field";
-import TommyBrookChampion from "./champion/TommyBrookChampion";
-import {Control} from "./control/Control";
-import {Stats} from "three-stats";
-import AlbertHoopChampion from "./champion/AlbertHoopChampion";
-import BattleCommunication from "./BattleCommunication";
+// import * as THREE from 'three';
+// import Field from "./field/Field";
+// import TommyBrookChampion from "./champion/TommyBrookChampion";
+// import {Control} from "./control/Control";
+// import {Stats} from "three-stats";
+// import AlbertHoopChampion from "./champion/AlbertHoopChampion";
+// import BattleCommunication from "./BattleCommunication";
 
 export default class BattleChampion {
 

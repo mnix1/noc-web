@@ -56,7 +56,7 @@ export default class App extends React.Component {
                 if (error) {
                     return <div>{error.message}</div>;
                 } else if (props) {
-                    console.log('App', props);
+                    // console.log('App', props);
                     return <LayoutContainer {...props}/>;
                 }
                 return <div>Loading</div>;

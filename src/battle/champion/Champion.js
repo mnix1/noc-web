@@ -58,6 +58,9 @@ export default class Champion {
             return new Promise((resolve, reject) => {
                 new FBXLoader().load(value, (animationObject) => {
                     this.animations[key] = animationObject.animations[0];
+                    if(key === 'run'){
+                        console.log(THREE.AnimationClip.toJSON(this.animations[key]));
+                    }
                     resolve();
                 });
             });
