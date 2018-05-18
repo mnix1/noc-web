@@ -18,6 +18,7 @@ export default class TommyBrookChampion extends Champion {
             walkLeft,
             run,
             dance,
-        })
+        });
+        this.boneNames = {head: 'Head'};
     }
 }

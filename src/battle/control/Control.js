@@ -6,15 +6,18 @@ export class Control {
 
     constructor(champion, domElement, startPosition) {
         this.champion = champion;
-        this.object = champion.mesh;
+        this.body = champion.mesh;
+        this.head = champion.bones.head;
+        this.box = new THREE.Box3().setFromObject(this.body);
         this.target = new THREE.Vector3(0, 0, 0);
+        this.headTarget = new THREE.Vector3(0, 0, 0);
+        this.bodyTarget = new THREE.Vector3(0, 0, 0);
         this.domElement = domElement || document;
-        this.box = new THREE.Box3().setFromObject(this.object);
         this.walkSpeed = 1.0;
         this.sprintSpeed = 3.0;
+        this.targetDistance = 100;
         this.lookSpeed = 0.1;
-        this.lookVertical = false;
-        this.activeLook = true;
+        this.lookVertical = true;
         this.constrainVertical = true;
         this.verticalMin = 0;
         this.verticalMax = Math.PI;
@@ -63,14 +66,11 @@ export class Control {
     update(delta) {
         const moveForwardSpeed = delta * (this.action[SPRINT] ? this.sprintSpeed : this.walkSpeed);
         const moveOtherSpeed = delta * this.walkSpeed;
-        if (this.action[MOVE_FORWARD] && !this.action[MOVE_BACKWARD]) this.object.translateZ((moveForwardSpeed));
-        if (this.action[MOVE_BACKWARD] && !this.action[MOVE_FORWARD]) this.object.translateZ(-moveOtherSpeed);
-        if (this.action[MOVE_LEFT] && !this.action[MOVE_RIGHT]) this.object.translateX(moveOtherSpeed);
-        if (this.action[MOVE_RIGHT] && !this.action[MOVE_LEFT]) this.object.translateX(-moveOtherSpeed);
-        let actualLookSpeed = delta * this.lookSpeed;
-        if (!this.activeLook) {
-            actualLookSpeed = 0;
-        }
+        if (this.action[MOVE_FORWARD] && !this.action[MOVE_BACKWARD]) this.body.translateZ((moveForwardSpeed));
+        if (this.action[MOVE_BACKWARD] && !this.action[MOVE_FORWARD]) this.body.translateZ(-moveOtherSpeed);
+        if (this.action[MOVE_LEFT] && !this.action[MOVE_RIGHT]) this.body.translateX(moveOtherSpeed);
+        if (this.action[MOVE_RIGHT] && !this.action[MOVE_LEFT]) this.body.translateX(-moveOtherSpeed);
+        const actualLookSpeed = delta * this.lookSpeed;
         let verticalLookRatio = 1;
         if (this.constrainVertical) {
             verticalLookRatio = Math.PI / (this.verticalMax - this.verticalMin);
@@ -83,15 +83,33 @@ export class Control {
         if (this.constrainVertical) {
             this.phi = THREE.Math.mapLinear(this.phi, 0, Math.PI, this.verticalMin, this.verticalMax);
         }
-        const targetPosition = this.target,
-            position = this.object.position;
-        const targetDistance = 10;
-        targetPosition.x = position.x + targetDistance * Math.sin(this.phi) * Math.cos(this.theta);
-        targetPosition.y = position.y + targetDistance * Math.cos(this.phi);
-        targetPosition.z = position.z + targetDistance * Math.sin(this.phi) * Math.sin(this.theta);
-        this.object.lookAt(targetPosition);
+        const bodyPosition = this.body.position;
+        this.target.x = bodyPosition.x + this.targetDistance * Math.sin(this.phi) * Math.cos(this.theta);
+        this.target.y = bodyPosition.y + this.targetDistance * Math.cos(this.phi);
+        this.target.z = bodyPosition.z + this.targetDistance * Math.sin(this.phi) * Math.sin(this.theta);
+        this.updateBodyTarget();
+        // const bodyTargetPosition = headTargetPosition.clone();
+        // bodyTargetPosition.y = 0;
+        // this.body.lookAt(bodyTargetPosition);
         this.clearPointer();
     };
+
+    updateBodyTarget() {
+        const distance = Math.sqrt(Math.pow(this.target.x - this.bodyTarget.x, 2) + Math.pow(this.target.z - this.bodyTarget.z, 2));
+        console.log('distance', distance);
+        this.headTarget.y = this.target.y;
+        if (this.action.isMoving() || distance > this.targetDistance / 2) {
+            this.bodyTarget.x = this.target.x;
+            this.bodyTarget.z = this.target.z;
+            this.body.lookAt(this.bodyTarget);
+            this.headTarget.x = 0;
+            this.headTarget.z = this.targetDistance;
+        } else {
+            this.headTarget.x += this.targetDistance * Math.sin(this.phi) * Math.cos(this.theta);
+            this.headTarget.z += this.targetDistance * Math.sin(this.phi) * Math.sin(this.theta);
+        }
+        this.head.lookAt(this.headTarget);
+    }
 
     clearPointer() {
         if (this.pointer.x !== 0 || this.pointer.y !== 0) {
@@ -103,11 +121,11 @@ export class Control {
 
     prepareCameraPosition() {
         const position = new THREE.Vector3(0, 0, 0);
-        position.sub(this.target);
-        position.add(this.object.position);
+        position.sub(this.headTarget);
+        position.add(this.body.position);
         position.normalize();
         position.multiplyScalar(1.5);
-        position.add(this.object.position);
+        position.add(this.body.position);
         position.add(new THREE.Vector3(0, this.box.max.y * 1.05, 0));
         return position;
     }
@@ -123,7 +141,7 @@ export class Control {
     };
 
     addChangedRotation(o) {
-        const cR = this.object.rotation;
+        const cR = this.body.rotation;
         const pR = this.previousRotation;
         if (cR.x !== pR.x || cR.y !== pR.y || cR.z !== pR.z) {
             const rValue = (e) => Math.round(e * 1000);

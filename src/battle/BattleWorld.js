@@ -85,7 +85,7 @@ export default class BattleWorld {
         const endPosition = this.control.prepareCameraPosition();
         const targetStartPosition = new THREE.Vector3(0, 0, 0);
         const targetEndPosition = this.control.target;
-        const duration = 4;
+        const duration = 0.2;
         let timer = 0;
         const newPositionElement = (property) => startPosition[property] + (endPosition[property] - startPosition[property]) * timer / duration;
         const newTargetPositionElement = (property) => targetStartPosition[property] + (targetEndPosition[property] - targetStartPosition[property]) * timer / duration;
@@ -120,10 +120,17 @@ export default class BattleWorld {
 
     updateControls(delta) {
         if (this.control && this.controlReady) {
+            if(this.otherChampion.mesh){
+                this.control.target = this.otherChampion.mesh.position;
+            }
             this.control.update(delta);
-            const newCameraPosition = this.control.prepareCameraPosition();
-            this.camera.position.set(newCameraPosition.x, newCameraPosition.y, newCameraPosition.z);
-            this.camera.lookAt(this.control.target);
+            // const newCameraPosition = this.control.prepareCameraPosition();
+            // this.camera.position.set(newCameraPosition.x, newCameraPosition.y, newCameraPosition.z);
+            // this.camera.lookAt(this.control.target);
+            // const newCameraPosition = this.control.prepareCameraPosition();
+            // const target = this.control.target;
+            // this.camera.position.set(target.x, target.y, target.z);
+            // this.camera.lookAt(newCameraPosition);
         }
     }
 

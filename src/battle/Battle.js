@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import BattleCommunication from "./BattleCommunication";
 import BattleWorld from "./BattleWorld";
+import _ from 'lodash';
+
 window.THREE = THREE;
 
 // const stats = new Stats();
@@ -10,7 +12,7 @@ window.THREE = THREE;
 export default class Battle {
 
     constructor(container, worldRadius, socket) {
-        console.log('battle', this);
+        window.battle = this;
         this.clock = new THREE.Clock();
         this.communication = new BattleCommunication(socket, this);
         this.world = new BattleWorld(container, worldRadius);

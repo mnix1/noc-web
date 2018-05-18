@@ -18,6 +18,7 @@ export default class AlbertHoopChampion extends Champion {
             walkLeft,
             run,
             dance,
-        })
+        });
+        this.boneNames = {head: 'bossHead'};
     }
 }
