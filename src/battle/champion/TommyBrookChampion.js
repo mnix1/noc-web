@@ -6,6 +6,8 @@ import idle from '../../content/fbx/tommyBrook/idle.fbx';
 import run from '../../content/fbx/tommyBrook/run.fbx';
 import base from '../../content/fbx/tommyBrook/base.fbx';
 import dance from '../../content/fbx/tommyBrook/dance.fbx';
+import turnRight from '../../content/fbx/tommyBrook/turnRight.fbx';
+import turnLeft from '../../content/fbx/tommyBrook/turnLeft.fbx';
 import Champion from "./Champion";
 
 export default class TommyBrookChampion extends Champion {
@@ -18,6 +20,8 @@ export default class TommyBrookChampion extends Champion {
             walkLeft,
             run,
             dance,
+            turnRight,
+            turnLeft,
         });
         this.boneNames = {head: 'Head'};
     }

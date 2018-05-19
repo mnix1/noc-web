@@ -79,7 +79,7 @@ export default class BattleWorld {
     }
 
     initControl(champion, props) {
-        this.control = new Control(this.myChampion, this.renderer.domElement, THREE.Math.radToDeg(props.ry) + 90);
+        this.control = new Control(this.myChampion, this.renderer.domElement, props.ry + Math.PI / 2);
         this.control.update(0);
         const startPosition = this.camera.position.clone();
         const endPosition = this.control.prepareCameraPosition();
@@ -120,13 +120,13 @@ export default class BattleWorld {
 
     updateControls(delta) {
         if (this.control && this.controlReady) {
-            if(this.otherChampion.mesh){
-                this.control.target = this.otherChampion.mesh.position;
-            }
+            // if (this.otherChampion.mesh) {
+            //     this.control.target = this.otherChampion.mesh.position;
+            // }
             this.control.update(delta);
-            // const newCameraPosition = this.control.prepareCameraPosition();
-            // this.camera.position.set(newCameraPosition.x, newCameraPosition.y, newCameraPosition.z);
-            // this.camera.lookAt(this.control.target);
+            const newCameraPosition = this.control.prepareCameraPosition();
+            this.camera.position.set(newCameraPosition.x, newCameraPosition.y, newCameraPosition.z);
+            this.camera.lookAt(this.control.target);
             // const newCameraPosition = this.control.prepareCameraPosition();
             // const target = this.control.target;
             // this.camera.position.set(target.x, target.y, target.z);

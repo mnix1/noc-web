@@ -10,111 +10,15 @@ export default class Champion {
         this.bones = {};
         this.animations = {};
         this.actions = {};
-    }
-
-    correctSize() {
-        // this.mesh.rotation.y = Math.PI / 2;
-        // this.mesh.scale.set(0.009, 0.009, 0.009);
-        // const scalar = 0.02;
-        const scalar = 0.009;
-        this.mesh.scale.set(scalar, scalar, scalar);
-        // this.box = new THREE.Box3().setFromObject( this.mesh );
-    }
-
-    // get height(){
-    //     return this.box.max.y;
-    // }
-
-    playAnimation(key) {
-        if (!this.actions[key]) {
-            // const action = this.mesh.mixer.clipAction(this.animations[key]);
-            // action.play();
-            // this.actions[key] = action;
-        }
-    }
-
-    stopAnimation(key) {
-        const action = this.actions[key];
-        if (action) {
-            action.stop();
-            delete this.actions[key];
-        }
-    }
-
-    stopAllAndPlayAnimation(playKey) {
-        this.playAnimation(playKey);
-        _.forEach(this.actions, (value, key) => {
-            if (playKey !== key) {
-                value.stop();
-                delete this.actions[key];
-            }
-        });
-    }
-
-    updateMixer(delta) {
-        this.mesh.mixer.update(delta);
-    }
-
-    // invokeForAllBones(nameCheckFunction, functionToInvoke) {
-    //     this.getAllBones(nameCheckFunction).forEach(e => functionToInvoke(e));
-    // }
-    //
-    // getAllBones(nameCheckFunction) {
-    //     const bones = [];
-    //     this.mesh.children.forEach(e => {
-    //         bones.push(this.recursiveCheckObject(e, nameCheckFunction));
-    //     });
-    //     return _.flatten(bones);
-    // }
-    //
-    // recursiveCheckObject(object, nameCheckFunction) {
-    //     const o = [];
-    //     if (object.isBone && nameCheckFunction(object.name)) {
-    //         o.push(object);
-    //     }
-    //     if (object.isSkinnedMesh) {
-    //         object.skeleton.bones.forEach(e => {
-    //             const result = this.recursiveCheckObject(e, nameCheckFunction);
-    //             if (!_.isEmpty(result)) {
-    //                 result.forEach(e => o.push(e));
-    //             }
-    //         });
-    //     }
-    //     object.children.forEach(e => {
-    //         const result = this.recursiveCheckObject(e, nameCheckFunction);
-    //         if (!_.isEmpty(result)) {
-    //             result.forEach(e => o.push(e));
-    //         }
-    //     });
-    //     return o;
-    // }
-
-    createRunAnimation(name) {
-        const duration = 1;
-        const step = 1;
-        const times = new Float32Array(_.range(0, duration + step, step));
-        const values = new Float32Array([0, 0, 0, .99, -.3, 0, 0, .99]);
-        const tracks = [new THREE.QuaternionKeyframeTrack(name, times, values)];
-        return new THREE.AnimationClip('run2', duration, tracks);
+        this.animationsTimeScale = {turnLeft: 2, turnRight: 2, walkLeft: 1.2, walkRight: 1.2};
+        this.finishedAnimationListeners = [];
     }
 
     load() {
         const animationPromises = _.map(this.animationSources, (value, key) => {
             return new Promise((resolve, reject) => {
                 new FBXLoader().load(value, (animationObject) => {
-                    if (key === 'idle') {
-                        const anim = animationObject.animations[0];
-                        // const tracks = new THREE.QuaternionKeyframeTrack('head', [0.03, 0.06,0])
-                        // const animClip = new THREE.AnimationClip('run', anim.duration, anim.tracks.filter(e=>e.name==='bossHead.quaternion'));
-                        // this.animations[key] = animClip;
-                        // console.log(animClip);
-                        // const name = anim.tracks.map(e => e.name).filter(e => _.includes(e, 'Head'))[0];
-                        // console.log(anim, name);
-                        // this.animations[key] = this.createRunAnimation(name);
-                        // console.log(THREE.AnimationClip.toJSON(this.animations[key]));
-                    } else {
-                        this.animations[key] = animationObject.animations[0];
-                    }
+                    this.animations[key] = animationObject.animations[0];
                     resolve();
                 });
             });
@@ -124,6 +28,7 @@ export default class Champion {
                 this.mesh = baseObject;
                 this.initBones();
                 this.mesh.mixer = new THREE.AnimationMixer(this.mesh);
+                this.mesh.mixer.addEventListener('loop', this.handleAnimationFinished);
                 Promise.all(animationPromises).then(() => {
                     // this.isLoaded;
                     resolve(this);
@@ -136,6 +41,59 @@ export default class Champion {
         _.forEach(this.boneNames, (v, k) => {
             this.bones[k] = this.mesh.getObjectByName(v);
         });
+    }
+
+    correctSize() {
+        const scalar = 0.009;
+        this.mesh.scale.set(scalar, scalar, scalar);
+    }
+
+    prepareAnimation(key, loop = THREE.LoopRepeat) {
+        let action = this.actions[key];
+        if (!action) {
+            action = this.mesh.mixer.clipAction(this.animations[key]);
+            action.setLoop(loop);
+            if (this.animationsTimeScale[key]) {
+                action.timeScale = this.animationsTimeScale[key];
+            }
+            this.actions[key] = action;
+        }
+        return action;
+    }
+
+    playAnimation(key, loop) {
+        this.playingAnimationKey = key;
+        const action = this.prepareAnimation(key, loop);
+        if (action.isScheduled()) {
+            action.reset();
+        } else {
+            action.play();
+        }
+        return action;
+    }
+
+    playNextAnimation(oldAnimationKey = this.playingAnimationKey, newAnimationKey, newAnimationLoop) {
+        if (oldAnimationKey === newAnimationKey) {
+            return this.actions[newAnimationKey];
+        }
+        const action = this.playAnimation(newAnimationKey, newAnimationLoop);
+        return this.prepareAnimation(oldAnimationKey).crossFadeTo(action, 0.2, false);
+    }
+
+    updateMixer(delta) {
+        this.mesh.mixer.update(delta);
+    }
+
+    handleAnimationFinished = (props) => {
+        this.finishedAnimationListeners.forEach((e) => e(props, this));
+    };
+
+    addAnimationFinishedListener(e) {
+        this.finishedAnimationListeners.push(e);
+    }
+
+    removeAnimationFinishedListener(e) {
+        _.remove(this.finishedAnimationListeners, e);
     }
 
 }

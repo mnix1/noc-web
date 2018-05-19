@@ -55,8 +55,8 @@ export class ControlListeners {
     };
 
     onMouseMove = (event) => {
-        this.pointer.x = event.movementX * 100;
-        this.pointer.y = event.movementY * 100;
+        this.pointer.x = event.movementX;
+        this.pointer.y = event.movementY;
     };
 
     onKeyDown = (event) => {

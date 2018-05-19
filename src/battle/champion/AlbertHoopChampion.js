@@ -6,6 +6,8 @@ import idle from '../../content/fbx/albertHoop/idle.fbx';
 import run from '../../content/fbx/albertHoop/run.fbx';
 import base from '../../content/fbx/albertHoop/base.fbx';
 import dance from '../../content/fbx/albertHoop/dance.fbx';
+import turnLeft from '../../content/fbx/albertHoop/turnLeft.fbx';
+import turnRight from '../../content/fbx/albertHoop/turnRight.fbx';
 import Champion from "./Champion";
 
 export default class AlbertHoopChampion extends Champion {
@@ -18,6 +20,8 @@ export default class AlbertHoopChampion extends Champion {
             walkLeft,
             run,
             dance,
+            turnRight,
+            turnLeft,
         });
         this.boneNames = {head: 'bossHead'};
     }

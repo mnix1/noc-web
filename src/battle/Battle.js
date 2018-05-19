@@ -36,7 +36,7 @@ export default class Battle {
         const otherChampionProps = battleState.other.find(e => e.t === 'CHAMPION');
         // this.world.placeChampion(this.world.myChampion, myChampionProps);
         this.world.placeChampion(this.world.otherChampion, otherChampionProps);
-        this.world.otherChampion.stopAllAndPlayAnimation(otherChampionProps.a);
+        // this.world.otherChampion.stopAllAndPlayAnimation(otherChampionProps.a);
     }
 
     animate = () => {
