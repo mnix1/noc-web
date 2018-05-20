@@ -1,4 +1,4 @@
-import {DANCE, MOVE_BACKWARD, MOVE_FORWARD, MOVE_LEFT, MOVE_RIGHT, SPRINT} from "./Action";
+import {ATTACK, DANCE, MOVE_BACKWARD, MOVE_FORWARD, MOVE_LEFT, MOVE_RIGHT, SPRINT} from "./Action";
 
 export class ControlListeners {
 
@@ -12,7 +12,7 @@ export class ControlListeners {
     initListeners() {
         document.addEventListener('pointerlockchange', this.onPointerLockChanged, false);
         document.addEventListener('pointerlockerror', this.onPointerLockError, false);
-        window.addEventListener('click', this.onMouseClickWithoutLock, false);
+        window.addEventListener('click', this.onMouseClick, false);
         this.domElement.addEventListener('contextmenu', this.onContextMenu, false);
         window.addEventListener('keydown', this.onKeyDown, false);
         window.addEventListener('keyup', this.onKeyUp, false);
@@ -30,14 +30,19 @@ export class ControlListeners {
         console.error('onPointerLockError', e);
     };
 
-    onMouseClickWithoutLock = () => {
-        this.initPointerLock();
+    onMouseClick = () => {
+        if (this.initPointerLock()) {
+            return;
+        }
+        // this.action.change(ATTACK, true);
     };
 
     initPointerLock() {
         if (this.domElement !== document.pointerLockElement) {
             this.domElement.requestPointerLock();
+            return true;
         }
+        return false;
     }
 
     onContextMenu(event) {
@@ -47,7 +52,7 @@ export class ControlListeners {
     dispose() {
         document.removeEventListener('pointerlockchange', this.onPointerLockChanged, false);
         document.removeEventListener('pointerlockerror', this.onPointerLockError, false);
-        window.removeEventListener('click', this.onMouseClickWithoutLock, false);
+        window.removeEventListener('click', this.onMouseClick, false);
         this.domElement.removeEventListener('contextmenu', this.onContextMenu, false);
         this.domElement.removeEventListener('mousemove', this.onMouseMove, false);
         window.removeEventListener('keydown', this.onKeyDown, false);

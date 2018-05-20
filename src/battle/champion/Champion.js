@@ -8,9 +8,13 @@ export default class Champion {
         this.animationSources = animationSources;
         this.boneNames = {};
         this.bones = {};
-        this.animations = {};
         this.actions = {};
-        this.animationsTimeScale = {turnLeft: 2, turnRight: 2, walkLeft: 1.2, walkRight: 1.2};
+        this.actionsOptions = {
+            turnLeft: {timeScale: 2},
+            turnRight: {timeScale: 2},
+            walkLeft: {timeScale: 1.2},
+            walkRight: {timeScale: 1.2}
+        };
         this.finishedAnimationListeners = [];
     }
 
@@ -18,8 +22,7 @@ export default class Champion {
         const animationPromises = _.map(this.animationSources, (value, key) => {
             return new Promise((resolve, reject) => {
                 new FBXLoader().load(value, (animationObject) => {
-                    this.animations[key] = animationObject.animations[0];
-                    resolve();
+                    resolve({key, animation: animationObject.animations[0]});
                 });
             });
         });
@@ -29,8 +32,19 @@ export default class Champion {
                 this.initBones();
                 this.mesh.mixer = new THREE.AnimationMixer(this.mesh);
                 this.mesh.mixer.addEventListener('loop', this.handleAnimationFinished);
-                Promise.all(animationPromises).then(() => {
-                    // this.isLoaded;
+                this.mesh.mixer.addEventListener('finished', this.handleAnimationFinished);
+                Promise.all(animationPromises).then((animationObjects) => {
+                    animationObjects.forEach(animationObject => {
+                        const action = this.mesh.mixer.clipAction(animationObject.animation);
+                        const options = _.defaultTo(this.actionsOptions[animationObject.key], {});
+                        if (options.loop) {
+                            action.setLoop(options.loop);
+                        }
+                        if (options.timeScale) {
+                            action.timeScale = options.timeScale;
+                        }
+                        this.actions[animationObject.key] = action;
+                    });
                     resolve(this);
                 })
             });
@@ -48,22 +62,9 @@ export default class Champion {
         this.mesh.scale.set(scalar, scalar, scalar);
     }
 
-    prepareAnimation(key, loop = THREE.LoopRepeat) {
-        let action = this.actions[key];
-        if (!action) {
-            action = this.mesh.mixer.clipAction(this.animations[key]);
-            action.setLoop(loop);
-            if (this.animationsTimeScale[key]) {
-                action.timeScale = this.animationsTimeScale[key];
-            }
-            this.actions[key] = action;
-        }
-        return action;
-    }
-
-    playAnimation(key, loop) {
+    playAnimation(key) {
         this.playingAnimationKey = key;
-        const action = this.prepareAnimation(key, loop);
+        const action = this.actions[key];
         if (action.isScheduled()) {
             action.reset();
         } else {
@@ -72,12 +73,12 @@ export default class Champion {
         return action;
     }
 
-    playNextAnimation(oldAnimationKey = this.playingAnimationKey, newAnimationKey, newAnimationLoop) {
+    playNextAnimation(oldAnimationKey = this.playingAnimationKey, newAnimationKey) {
         if (oldAnimationKey === newAnimationKey) {
             return this.actions[newAnimationKey];
         }
-        const action = this.playAnimation(newAnimationKey, newAnimationLoop);
-        return this.prepareAnimation(oldAnimationKey).crossFadeTo(action, 0.2, false);
+        const action = this.playAnimation(newAnimationKey);
+        return this.actions[oldAnimationKey].crossFadeTo(action, 0.2, false);
     }
 
     updateMixer(delta) {

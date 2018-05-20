@@ -8,6 +8,7 @@ import base from '../../content/fbx/albertHoop/base.fbx';
 import dance from '../../content/fbx/albertHoop/dance.fbx';
 import turnLeft from '../../content/fbx/albertHoop/turnLeft.fbx';
 import turnRight from '../../content/fbx/albertHoop/turnRight.fbx';
+import attack from '../../content/fbx/albertHoop/attack.fbx';
 import Champion from "./Champion";
 
 export default class AlbertHoopChampion extends Champion {
@@ -22,6 +23,7 @@ export default class AlbertHoopChampion extends Champion {
             dance,
             turnRight,
             turnLeft,
+            attack,
         });
         this.boneNames = {head: 'bossHead'};
     }

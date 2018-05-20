@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import {ControlListeners} from "./ControlListeners";
-import {Action, DANCE, MOVE_BACKWARD, MOVE_FORWARD, MOVE_LEFT, MOVE_RIGHT, SPRINT} from "./Action";
+import {Action, ATTACK, DANCE, MOVE_BACKWARD, MOVE_FORWARD, MOVE_LEFT, MOVE_RIGHT, SPRINT} from "./Action";
 
 export class Control {
 
@@ -47,6 +47,8 @@ export class Control {
             newAnimation = 'walkLeft';
         } else if (this.action[DANCE]) {
             newAnimation = 'dance';
+        } else if (this.action[ATTACK]) {
+            newAnimation = 'attack';
         }
         this.champion.playNextAnimation(undefined, newAnimation);
         // this.champion.stopAllAndPlayAnimation(newAnimation);
