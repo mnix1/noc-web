@@ -2,12 +2,13 @@ import * as THREE from 'three';
 import BattleCommunication from "./BattleCommunication";
 import BattleWorld from "./BattleWorld";
 import _ from 'lodash';
+import {Stats} from "three-stats";
 
 window.THREE = THREE;
 
-// const stats = new Stats();
-// stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-// document.body.appendChild(stats.dom);
+const stats = new Stats();
+stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+document.body.appendChild(stats.dom);
 
 export default class Battle {
 
@@ -43,5 +44,6 @@ export default class Battle {
         requestAnimationFrame(this.animate);
         const delta = this.clock.getDelta();
         this.world.render(delta);
+        stats.update();
     };
 }

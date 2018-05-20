@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import * as THREE from "three";
 import groundMap from '../../content/texture/ground/data/map.png';
+import grassGround from '../../content/texture/ground/shit/grassTexture2.jpg';
 import plant_1 from '../../content/texture/ground/data/plant_1';
 import plant_2 from '../../content/texture/ground/data/plant_2';
 import plant_3 from '../../content/texture/ground/data/plant_3';
@@ -42,11 +43,15 @@ export default class Ground {
     }
 
     createGround() {
+        const grassTexture = new THREE.TextureLoader().load(grassGround);
         const planeMat = new THREE.MeshPhongMaterial({
-            color: 0x849f4d,
+            color: new THREE.Color(0x888888),
             specular: 0x000000,
+            map: grassTexture,
+            bumpMap: grassTexture,
+            bumpScale: -.05,
             shininess: 0,
-            side: THREE.DoubleSide,
+            side: THREE.BackSide,
         });
         const segments = 32;
         const circleGeometry = new THREE.CircleGeometry(this.worldRadius, segments);
@@ -59,7 +64,7 @@ export default class Ground {
             shininess: 0,
             flatShading: THREE.FlatShading
         });
-        const boundGeometry = new THREE.TorusGeometry(this.worldRadius - 0.5, 1, 6, 180);
+        const boundGeometry = new THREE.TorusGeometry(this.worldRadius - 0.5, 0.5, 6, 180);
         const bound = new THREE.Mesh(boundGeometry, boundMat);
         bound.rotation.x = Math.PI / 2;
         this.scene.add(bound);
@@ -67,7 +72,6 @@ export default class Ground {
 
     createPlants(texture) {
         texture.minFilter = texture.magFilter = THREE.LinearMipMapNearestFilter;
-        texture.needsUpdate = true;
         const material = new THREE.MeshPhongMaterial({
             color: new THREE.Color(0xffffff),
             shininess: 0,
@@ -80,36 +84,49 @@ export default class Ground {
             alphaTest: .25,
             side: THREE.DoubleSide
         });
+
+        const group = new THREE.Geometry();
         const jsonLoader = new THREE.JSONLoader();
-        _.forEach(plantsMap, (value, key) => {
+        _.forEach(plantsMap, (value, name) => {
             const object = jsonLoader.parse(value);
-            this.models[key] = new THREE.Mesh(object.geometry, material);
-            this.scene.add(this.creator(key));
+            const geometry = this.createGroupGeometry(this.countOfFlower(name), object.geometry);
+            if (!geometry) {
+                return;
+            }
+            const mesh = new THREE.Mesh(geometry);
+            group.mergeMesh(mesh);
         });
+        const bufferGeometry = new THREE.BufferGeometry().fromGeometry(group);
+        this.scene.add(new THREE.Mesh(bufferGeometry, material));
     }
 
-    creator(name) {
+    countOfFlower(name) {
         switch (name) {
             case 'grass':
-                return this.createRandomObject(1000, name, this.worldRadius - 2);
+                return 600;
             case 'flower_1':
             case 'flower_2':
-                return this.createRandomObject(400, name, this.worldRadius - 2);
+                return 0;
             default:
-                return this.createRandomObject(10, name, this.worldRadius - 2);
+                return 6;
         }
     }
 
-    createRandomObject(count, name, r) {
-        const group = new THREE.Object3D();
+    createGroupGeometry(count, geometry) {
+        if (count === 0) {
+            return;
+        }
+        const r = this.worldRadius - 1.5;
+        const group = new THREE.Geometry();
         for (let g = 0; g < count; g++) {
             const p = this.calculatePointInCircle(r);
-            group.children[g] = this.models[name].clone();
-            group.children[g].position.x = p[0];
-            group.children[g].position.z = p[1];
-            group.children[g].rotation.y = this.randNum(0, 360, true) * Math.PI / 180;
+            const mesh = new THREE.Mesh(geometry);
+            mesh.position.x = p[0];
+            mesh.position.z = p[1];
+            mesh.rotation.y = this.randNum(0, 360, true) * Math.PI / 180;
             const scalar = this.randNum(.4, .5, false);
-            group.children[g].scale.set(scalar, scalar, scalar);
+            mesh.scale.set(scalar, scalar, scalar);
+            group.mergeMesh(mesh);
         }
         return group;
     }

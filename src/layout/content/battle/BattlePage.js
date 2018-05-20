@@ -33,7 +33,7 @@ export default class BattlePage extends React.Component {
     battleInit() {
         const {socket, battleStatus} = this.props;
         if (battleStatus === BATTLE_STATUS_PREPARING && battle === undefined) {
-            battle = new Battle(CONTAINER, 16, socket);
+            battle = new Battle(CONTAINER, 12, socket);
             battle.animate();
         }
     }

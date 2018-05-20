@@ -11,20 +11,20 @@ export default class Field {
 
     initSun() {
         this.pointLight1 = new THREE.PointLight(0xdddddd, 1);
-        this.pointLight1.position.set(0, this.worldRadius, 0);
-        this.pointLight2 = new THREE.PointLight(0xdddddd, 1);
-        this.pointLight2.position.set(0, 0, this.worldRadius);
+        this.pointLight1.position.set(0, this.worldRadius / 2, 0);
+        // this.pointLight2 = new THREE.PointLight(0xdddddd, 1);
+        // this.pointLight2.position.set(0, 0, this.worldRadius);
         this.time = 0;
         this.scene.add(this.pointLight1);
-        this.scene.add(this.pointLight2);
+        // this.scene.add(this.pointLight2);
     }
 
     updateSunPosition(delta) {
         this.time += delta;
-        const fullRotationDuration = 30;
+        const fullRotationDuration = 20;
         const t = this.time / fullRotationDuration * Math.PI * 2;
-        this.pointLight1.position.set(Math.sin(t) * this.worldRadius, Math.cos(t) * this.worldRadius, 0);
-        this.pointLight2.position.set(0, Math.sin(t / 2 + Math.PI * 3 / 4) * this.worldRadius, Math.cos(t / 2 + Math.PI * 3 / 4) * this.worldRadius);
+        this.pointLight1.position.set(Math.sin(t) * this.worldRadius / 2, this.worldRadius / 2, Math.cos(t) * this.worldRadius / 2);
+        // this.pointLight2.position.set(Math.cos(t / 2 + Math.PI * 3 / 4) * this.worldRadius, this.worldRadius, Math.cos(t / 2 + Math.PI * 3 / 4) * this.worldRadius);
     }
 
     // createTree(scene, x, y, heightScale) {

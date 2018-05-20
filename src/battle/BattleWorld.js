@@ -32,6 +32,9 @@ export default class BattleWorld {
     initLight() {
         const ambientLight = new THREE.AmbientLight(0xaaaaaa);
         this.scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0x888888, 1);
+        directionalLight.position.y = this.worldRadius;
+        this.scene.add(directionalLight);
     }
 
     initCamera() {
@@ -85,7 +88,7 @@ export default class BattleWorld {
         const endPosition = this.control.prepareCameraPosition();
         const targetStartPosition = new THREE.Vector3(0, 0, 0);
         const targetEndPosition = this.control.target;
-        const duration = 0.2;
+        const duration = 5;
         let timer = 0;
         const newPositionElement = (property) => startPosition[property] + (endPosition[property] - startPosition[property]) * timer / duration;
         const newTargetPositionElement = (property) => targetStartPosition[property] + (targetEndPosition[property] - targetStartPosition[property]) * timer / duration;
@@ -136,7 +139,6 @@ export default class BattleWorld {
 
     render(delta) {
         this.champions.forEach(e => e.updateMixer(delta));
-        // stats.update();
         this.updateAnimations(delta);
         this.updateControls(delta);
         this.renderer.render(this.scene, this.camera);
