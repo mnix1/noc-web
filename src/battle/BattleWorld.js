@@ -30,9 +30,9 @@ export default class BattleWorld {
     }
 
     initLight() {
-        const ambientLight = new THREE.AmbientLight(0xaaaaaa);
+        const ambientLight = new THREE.AmbientLight(0xbbbbbb);
         this.scene.add(ambientLight);
-        const directionalLight = new THREE.DirectionalLight(0x888888, 1);
+        const directionalLight = new THREE.DirectionalLight(0x666666, 0.5);
         directionalLight.position.y = this.worldRadius;
         this.scene.add(directionalLight);
     }

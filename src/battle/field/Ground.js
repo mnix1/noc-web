@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import * as THREE from "three";
 import groundMap from '../../content/texture/ground/data/map.png';
-import grassGround from '../../content/texture/ground/shit/grassTexture2.jpg';
+import grassGround from '../../content/texture/ground/shit/grassTexture7.jpg';
 import plant_1 from '../../content/texture/ground/data/plant_1';
 import plant_2 from '../../content/texture/ground/data/plant_2';
 import plant_3 from '../../content/texture/ground/data/plant_3';
@@ -44,13 +44,17 @@ export default class Ground {
 
     createGround() {
         const grassTexture = new THREE.TextureLoader().load(grassGround);
+        grassTexture.wrapS = THREE.RepeatWrapping;
+        grassTexture.wrapT = THREE.RepeatWrapping;
+        grassTexture.repeat.set( 18,20 );
         const planeMat = new THREE.MeshPhongMaterial({
-            color: new THREE.Color(0x888888),
-            specular: 0x000000,
+            color: new THREE.Color(0xdddddd),
             map: grassTexture,
             bumpMap: grassTexture,
             bumpScale: -.05,
+            specular: 0x000000,
             shininess: 0,
+            flatShading: THREE.FlatShading,
             side: THREE.BackSide,
         });
         const segments = 32;
@@ -103,12 +107,12 @@ export default class Ground {
     countOfFlower(name) {
         switch (name) {
             case 'grass':
-                return 600;
+                return 10;
             case 'flower_1':
             case 'flower_2':
-                return 0;
+                return 10;
             default:
-                return 6;
+                return 10;
         }
     }
 
