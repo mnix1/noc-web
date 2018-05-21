@@ -90,15 +90,15 @@ export class Control {
         const maxAngle = Math.PI / 3 + Math.PI / 6;
         if (Math.abs(this.bodyUpdatedHorizontalAngle - this.horizontalAngle) > maxAngle) {
             if (this.bodyUpdatedHorizontalAngle > this.horizontalAngle) {
-                this.champion.playNextAnimation(undefined, 'turnLeft');
+                // this.champion.playNextAnimation(undefined, 'turnLeft');
             } else {
-                this.champion.playNextAnimation(undefined, 'turnRight');
+                // this.champion.playNextAnimation(undefined, 'turnRight');
             }
             this.bodyUpdatedHorizontalAngle = this.horizontalAngle;
         } else {
             this.headTarget.x = bodyPosition.x + this.targetDistance * Math.sin(this.bodyUpdatedHorizontalAngle - this.horizontalAngle);
             this.headTarget.z = bodyPosition.z + this.targetDistance * Math.cos(this.horizontalAngle - this.bodyUpdatedHorizontalAngle);
-            this.head.lookAt(this.headTarget);
+            // this.head.lookAt(this.headTarget);
         }
     }
 
@@ -109,7 +109,7 @@ export class Control {
         if (this.headTarget.x !== 0 || this.headTarget.z !== this.targetDistance) {
             this.headTarget.x = 0;
             this.headTarget.z = this.targetDistance;
-            this.head.lookAt(this.headTarget);
+            // this.head.lookAt(this.headTarget);
         }
     }
 

@@ -88,7 +88,7 @@ export default class BattleWorld {
         const endPosition = this.control.prepareCameraPosition();
         const targetStartPosition = new THREE.Vector3(0, 0, 0);
         const targetEndPosition = this.control.target;
-        const duration = 5;
+        const duration = 0.5;
         let timer = 0;
         const newPositionElement = (property) => startPosition[property] + (endPosition[property] - startPosition[property]) * timer / duration;
         const newTargetPositionElement = (property) => targetStartPosition[property] + (targetEndPosition[property] - targetStartPosition[property]) * timer / duration;

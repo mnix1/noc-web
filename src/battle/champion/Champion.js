@@ -1,11 +1,12 @@
 import * as THREE from 'three';
-import FBXLoader from "../../loader/FBXLoader";
 import _ from 'lodash';
+import ColladaLoader from '../../loader/ColladaLoader';
 
 export default class Champion {
-    constructor(baseSource, animationSources) {
-        this.baseSource = baseSource;
-        this.animationSources = animationSources;
+    constructor(id) {
+        this.id = id;
+        this.baseSource = this.createUrl('base');
+        this.animations = ['idle'];
         this.boneNames = {};
         this.bones = {};
         this.actions = {};
@@ -18,21 +19,27 @@ export default class Champion {
         this.finishedAnimationListeners = [];
     }
 
+    createUrl(key){
+        return `static/media/${this.id}/${key}.dae`;
+    }
+
     load() {
-        const animationPromises = _.map(this.animationSources, (value, key) => {
+        const animationPromises = _.map(this.animations, (key) => {
             return new Promise((resolve, reject) => {
-                new FBXLoader().load(value, (animationObject) => {
+                new ColladaLoader().load(this.createUrl(key), (animationObject) => {
+                    console.log('animationObject', animationObject);
                     resolve({key, animation: animationObject.animations[0]});
                 });
             });
         });
         return new Promise((resolve, reject) => {
-            new FBXLoader().load(this.baseSource, (baseObject) => {
-                this.mesh = baseObject;
+            new ColladaLoader().load(this.baseSource, (baseObject) => {
+                console.log('baseObject', baseObject);
+                this.mesh = baseObject.scene;
                 this.initBones();
                 this.mesh.mixer = new THREE.AnimationMixer(this.mesh);
-                this.mesh.mixer.addEventListener('loop', this.handleAnimationFinished);
-                this.mesh.mixer.addEventListener('finished', this.handleAnimationFinished);
+                // this.mesh.mixer.addEventListener('loop', this.handleAnimationFinished);
+                // this.mesh.mixer.addEventListener('finished', this.handleAnimationFinished);
                 Promise.all(animationPromises).then((animationObjects) => {
                     animationObjects.forEach(animationObject => {
                         const action = this.mesh.mixer.clipAction(animationObject.animation);
@@ -58,8 +65,8 @@ export default class Champion {
     }
 
     correctSize() {
-        const scalar = 0.009;
-        this.mesh.scale.set(scalar, scalar, scalar);
+        // const scalar = 0.009;
+        // this.mesh.scale.set(scalar, scalar, scalar);
     }
 
     playAnimation(key) {
