@@ -9,3 +9,9 @@ export function getChampionById(id) {
         return TommyBrookChampion;
     }
 }
+
+export function prepareAssetUrl(id, key) {
+    return `static/media/${id}/${key}.dae`;
+}
+
+export const HEAD_BONE = 'head';

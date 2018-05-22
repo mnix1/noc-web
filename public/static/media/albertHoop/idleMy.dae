@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+    <asset>
+        <contributor>
+            <author>Mixamo</author>
+            <authoring_tool>COLLADA Mixamo exporter</authoring_tool>
+            <comments></comments>
+        </contributor>
+        <created>2018-05-21T19:20:36Z</created>
+        <modified>2018-05-21T19:20:36Z</modified>
+        <revision></revision>
+        <title></title>
+        <unit meter="0.010000"/>
+        <up_axis>Y_UP</up_axis>
+    </asset>
+    <library_animations>
+        <animation id="boss_Head-anim" name="boss_Head">
+            <source id="boss_Head-Matrix-animation-input">
+                <float_array id="boss_Head-Matrix-animation-input-array" count="4">
+                    0.000000 0.500000 1.000000 1.500000
+                </float_array>
+                <technique_common>
+                    <accessor source="#boss_Head-Matrix-animation-input-array" count="4">
+                        <param name="TIME" type="float"/>
+                    </accessor>
+                </technique_common>
+            </source>
+            <source id="boss_Head-Matrix-animation-output-transform">
+                <float_array id="boss_Head-Matrix-animation-output-transform-array" count="64">
+                    0.999984 -0.001038 -0.005561 0.000000 0.001142 0.999823 0.018780 4.026600 0.005540 -0.018786
+                    0.999808 0.858500 0.000000 0.000000 0.000000 1.000000
+                    0.999985 -0.000981 -0.005434 0.000000 0.001027 0.999963 0.008486 4.026600 0.005426 -0.008492
+                    0.999949 0.858500 0.000000 0.000000 0.000000 1.000000
+                    0.999986 -0.000773 -0.005310 0.000000 0.000820 0.999960 0.008884 4.026600 0.005303 -0.008888
+                    0.999946 0.858500 0.000000 0.000000 0.000000 1.000000
+                    0.999985 -0.000876 -0.005475 -0.000000 0.000976 0.999834 0.018186 4.026600 0.005458 -0.018191
+                    0.999820 0.858500 0.000000 0.000000 0.000000 1.000000
+                </float_array>
+                <technique_common>
+                    <accessor source="#boss_Head-Matrix-animation-output-transform-array" count="4" stride="16">
+                        <param type="float4x4"/>
+                    </accessor>
+                </technique_common>
+            </source>
+            <source id="boss_Head-Interpolations">
+                <Name_array id="boss_Head-Interpolations-array" count="4">
+                    LINEAR LINEAR LINEAR LINEAR
+                </Name_array>
+                <technique_common>
+                    <accessor source="#boss_Head-Interpolations-array" count="4">
+                        <param type="name"/>
+                    </accessor>
+                </technique_common>
+            </source>
+            <sampler id="boss_Head-Matrix-animation-transform">
+                <input semantic="INPUT" source="#boss_Head-Matrix-animation-input"/>
+                <input semantic="OUTPUT" source="#boss_Head-Matrix-animation-output-transform"/>
+                <input semantic="INTERPOLATION" source="#boss_Head-Interpolations"/>
+            </sampler>
+            <channel source="#boss_Head-Matrix-animation-transform" target="boss_Head/matrix"/>
+        </animation>
+    </library_animations>
+    <library_visual_scenes>
+        <visual_scene id="RootNode" name="RootNode">
+            <node id="boss_Hips" name="boss_Hips" sid="boss_Hips" type="JOINT">
+                <matrix sid="matrix">0.730997 0.050944 -0.680476 0.060788 0.002730 0.996983 0.077572 89.783302 0.682375
+                    -0.058562 0.728653 -0.879129 0.000000 0.000000 0.000000 1.000000
+                </matrix>
+                <node id="boss_Spine" name="boss_Spine" sid="boss_Spine" type="JOINT">
+                    <matrix sid="matrix">0.996700 0.021816 0.078187 -0.000000 -0.013824 0.994756 -0.101339 9.226300
+                        -0.079988 0.099924 0.991775 1.577100 0.000000 0.000000 0.000000 1.000000
+                    </matrix>
+                    <node id="boss_Spine1" name="boss_Spine1" sid="boss_Spine1" type="JOINT">
+                        <matrix sid="matrix">0.986184 0.053092 0.156915 -0.000000 -0.020480 0.979057 -0.202553 16.254000
+                            -0.164382 0.196541 0.966618 -0.165600 0.000000 0.000000 0.000000 1.000000
+                        </matrix>
+                        <node id="boss_Spine2" name="boss_Spine2" sid="boss_Spine2" type="JOINT">
+                            <matrix sid="matrix">0.986184 0.053092 0.156915 0.000000 -0.020480 0.979057 -0.202553
+                                13.639600 -0.164382 0.196541 0.966618 -1.292300 0.000000 0.000000 0.000000 1.000000
+                            </matrix>
+                            <node id="boss_Neck" name="boss_Neck" sid="boss_Neck" type="JOINT">
+                                <matrix sid="matrix">0.999984 -0.001038 -0.005561 0.000000 0.001143 0.999823 0.018780
+                                    13.877400 0.005540 -0.018786 0.999808 -4.354200 0.000000 0.000000 0.000000 1.000000
+                                </matrix>
+                                <node id="boss_Neck1" name="boss_Neck1" sid="boss_Neck1" type="JOINT">
+                                    <matrix sid="matrix">0.999984 -0.001038 -0.005561 -0.000000 0.001143 0.999823
+                                        0.018781 4.340000 0.005540 -0.018787 0.999808 0.926900 0.000000 0.000000
+                                        0.000000 1.000000
+                                    </matrix>
+                                    <node id="boss_Head" name="boss_Head" sid="boss_Head" type="JOINT">
+                                        <matrix sid="matrix">0.999984 -0.001038 -0.005561 0.000000 0.001142 0.999823
+                                            0.018780 4.026600 0.005540 -0.018786 0.999808 0.858500 0.000000 0.000000
+                                            0.000000 1.000000
+                                        </matrix>
+                                        <node id="boss_HeadTop_End" name="boss_HeadTop_End" sid="boss_HeadTop_End"
+                                              type="JOINT">
+                                            <matrix sid="matrix">1.000000 0.000000 0.000000 -0.000000 -0.000000 1.000000
+                                                0.000000 41.690300 0.000000 -0.000000 1.000000 2.737800 0.000000
+                                                0.000000 0.000000 1.000000
+                                            </matrix>
+                                        </node>
+                                    </node>
+                                </node>
+                            </node>
+                        </node>
+                    </node>
+                </node>
+            </node>
+        </visual_scene>
+    </library_visual_scenes>
+    <scene>
+        <instance_visual_scene url="#RootNode"/>
+    </scene>
+</COLLADA>

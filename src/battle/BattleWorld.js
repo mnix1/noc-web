@@ -54,7 +54,7 @@ export default class BattleWorld {
     initMyChampion(props) {
         const championClass = getChampionById(props.id);
         this.myChampion = new championClass();
-        return this.myChampion.load().then((champion) => {
+        return this.myChampion.init().then((champion) => {
             this.initChampion(champion, props);
             this.initControl(champion, props);
         });
@@ -63,7 +63,7 @@ export default class BattleWorld {
     initOtherChampion(props) {
         const championClass = getChampionById(props.id);
         this.otherChampion = new championClass();
-        return this.otherChampion.load().then((champion) => {
+        return this.otherChampion.init().then((champion) => {
             this.initChampion(champion, props);
         });
     }
@@ -71,7 +71,7 @@ export default class BattleWorld {
     initChampion(champion, props) {
         champion.correctSize();
         this.scene.add(champion.mesh);
-        champion.playAnimation(props.a);
+        champion.animationManager.playAnimation(props.a);
         this.champions.push(champion);
         this.placeChampion(champion, props);
     }
@@ -138,7 +138,7 @@ export default class BattleWorld {
     }
 
     render(delta) {
-        this.champions.forEach(e => e.updateMixer(delta));
+        this.champions.forEach(e => e.animationManager.updateMixer(delta));
         this.updateAnimations(delta);
         this.updateControls(delta);
         this.renderer.render(this.scene, this.camera);

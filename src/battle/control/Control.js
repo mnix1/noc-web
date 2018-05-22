@@ -28,7 +28,7 @@ export class Control {
         this.controlListeners = new ControlListeners(domElement, this.action, this.pointer);
         this.changeListeners = [];
 
-        this.champion.addAnimationFinishedListener(this.handleChampionAnimationFinished);
+        // this.champion.addAnimationFinishedListener(this.handleChampionAnimationFinished);
     }
 
     handleActionChanged = () => {
@@ -50,7 +50,7 @@ export class Control {
         } else if (this.action[ATTACK]) {
             newAnimation = 'attack';
         }
-        this.champion.playNextAnimation(undefined, newAnimation);
+        // this.champion.playNextAnimation(undefined, newAnimation);
         // this.champion.stopAllAndPlayAnimation(newAnimation);
     };
 
