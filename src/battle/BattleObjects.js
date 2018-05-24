@@ -12,7 +12,7 @@ export default class BattleChampion {
     //     this.champions = [];
     // }
     //
-    // initMyChampion(championClass, props) {
+    // initControlChampion(championClass, props) {
     //     this.myChampion = new championClass((champion) => {
     //         this.initChampion(champion, props);
     //         this.initControl(champion, props);

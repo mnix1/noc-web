@@ -20,10 +20,11 @@ export default class Battle {
     }
 
     init(battleState) {
-        const myChampionProps = battleState.my.find(e => e.t === 'CHAMPION');
-        const otherChampionProps = battleState.other.find(e => e.t === 'CHAMPION');
-        this.world.initOtherChampion(otherChampionProps).then(() => {
-            return this.world.initMyChampion(myChampionProps);
+        const myChampionsProps = battleState.my.filter(e => e.t === 'CHAMPION');
+        const controlChampionProps = myChampionsProps[0];
+        const otherChampionsProps = _.flatten([battleState.other.filter(e => e.t === 'CHAMPION'), _.tail(myChampionsProps)]);
+        this.world.initOtherChampions(otherChampionsProps).then(() => {
+            return this.world.initControlChampion(controlChampionProps);
         }).then(() => {
             this.communication.ready();
         });
@@ -34,10 +35,13 @@ export default class Battle {
 
     update(battleState) {
         // const myChampionProps = battleState.my.find(e => e.t === 'CHAMPION');
-        const otherChampionProps = battleState.other.find(e => e.t === 'CHAMPION');
+        const otherChampionsProps = battleState.other.filter(e => e.t === 'CHAMPION');
         // this.world.placeChampion(this.world.myChampion, myChampionProps);
-        this.world.placeChampion(this.world.otherChampion, otherChampionProps);
-        this.world.otherChampion.animationManager.playNextAnimation(undefined, otherChampionProps.a);
+        otherChampionsProps.forEach(otherChampionProps => {
+            const champion = this.world.findObject(otherChampionProps.uuid);
+            this.world.placeChampion(champion, otherChampionProps);
+            champion.animationManager.playNextAnimation(undefined, otherChampionProps.a);
+        });
     }
 
     animate = () => {

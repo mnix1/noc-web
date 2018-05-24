@@ -2,19 +2,20 @@ import * as THREE from 'three';
 import _ from 'lodash';
 import ColladaLoader from '../../loader/ColladaLoader';
 import ChampionAnimationManager from "./animation/ChampionAnimationManager";
-import {prepareAssetUrl} from "./ChampionHelper";
+import {HEAD_BONE, prepareAssetUrl} from "./ChampionHelper";
 
 export default class Champion {
     constructor(id) {
         this.id = id;
         this.baseUrl = prepareAssetUrl(this.id, 'base');
-        this.boneNames = {};
+        this.boneNames = {[HEAD_BONE]: 'Head'};
         this.bones = {};
         this.animationManager = new ChampionAnimationManager(this);
     }
 
     init() {
         return this.loadBase(this.animationManager.createAnimations);
+        // return this.loadBase(this.animationManager.loadAnimations);
     }
 
     loadBase(animationInitializer) {

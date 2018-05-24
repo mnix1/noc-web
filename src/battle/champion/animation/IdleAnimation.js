@@ -11,12 +11,13 @@ export default class IdleAnimation extends Animation {
     }
 
     get duration() {
-        return 1;
+        return 2;
     }
 
     prepareTracks() {
         return [
-            this.createPositionTrack(HEAD_BONE, [0, 0.5, 1.0], [0.1, 0.2, 0.5, 0.1, 0.3, 0.6, 0.3, 0.0, 0.8])
+            this.createPositionTrack(HEAD_BONE, [0, .6, 2], [0, 6, 0, .3, 6.2, .3, 0, 6, 0]),
+            this.createQuaternionTrack(HEAD_BONE, [0, .6, 2], [0, 0, 0, 1, .06, .01, .01, 1, 0, 0, 0, 1])
         ]
     }
 }

@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import * as THREE from 'three';
 import Field from "./field/Field";
 import {Control} from "./control/Control";
@@ -51,17 +52,21 @@ export default class BattleWorld {
         });
     }
 
-    initMyChampion(props) {
-        const championClass = getChampionById(props.id);
-        this.myChampion = new championClass();
-        return this.myChampion.init().then((champion) => {
+    initControlChampion(props) {
+        const championClass = getChampionById(props.cid);
+        this.controlChampion = new championClass();
+        return this.controlChampion.init().then((champion) => {
             this.initChampion(champion, props);
             this.initControl(champion, props);
         });
     }
 
+    initOtherChampions(championsProps) {
+        return Promise.all(championsProps.map(e => this.initOtherChampion(e)));
+    }
+
     initOtherChampion(props) {
-        const championClass = getChampionById(props.id);
+        const championClass = getChampionById(props.cid);
         this.otherChampion = new championClass();
         return this.otherChampion.init().then((champion) => {
             this.initChampion(champion, props);
@@ -72,8 +77,12 @@ export default class BattleWorld {
         champion.correctSize();
         this.scene.add(champion.mesh);
         champion.animationManager.playAnimation(props.a);
-        this.champions.push(champion);
+        this.champions.push({champion, uuid: props.uuid});
         this.placeChampion(champion, props);
+    }
+
+    findObject(uuid){
+        return _.defaultTo(_.find(this.champions, e => e.uuid === uuid), {}).champion;
     }
 
     placeChampion(champion, props) {
@@ -82,7 +91,7 @@ export default class BattleWorld {
     }
 
     initControl(champion, props) {
-        this.control = new Control(this.myChampion, this.renderer.domElement, props.ry + Math.PI / 2);
+        this.control = new Control(this.controlChampion, this.renderer.domElement, props.ry + Math.PI / 2);
         this.control.update(0);
         const startPosition = this.camera.position.clone();
         const endPosition = this.control.prepareCameraPosition();
@@ -138,7 +147,7 @@ export default class BattleWorld {
     }
 
     render(delta) {
-        this.champions.forEach(e => e.animationManager.updateMixer(delta));
+        this.champions.forEach(e => e.champion.animationManager.updateMixer(delta));
         this.updateAnimations(delta);
         this.updateControls(delta);
         this.renderer.render(this.scene, this.camera);
