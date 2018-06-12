@@ -6,7 +6,7 @@ import {prepareAssetUrl} from "../ChampionHelper";
 export default class ChampionAnimationManager {
     constructor(champion) {
         this.champion = champion;
-        this.animations = ['idle'];
+        this.animations = ['idle', 'walk'];
         this.actions = {};
         this.actionsOptions = {
             // turnLeft: {timeScale: 2},

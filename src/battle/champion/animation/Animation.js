@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import _ from 'lodash';
 
 export default class Animation {
     constructor(champion) {
@@ -14,7 +15,16 @@ export default class Animation {
         return undefined;
     }
 
+    bodyParam(name) {
+        return this.champion.bodyParam[name];
+    }
+
     prepareTracks() {
+        return this.prepareRawTracks().filter(e => !_.isNil(e));
+    }
+
+    prepareRawTracks() {
+        return [];
     }
 
     createPositionTrack(boneName, times, values) {
@@ -30,6 +40,9 @@ export default class Animation {
     }
 
     createTrack(clazz, property, boneName, times, values) {
+        if (!this.champion.hasBone(boneName)) {
+            return null;
+        }
         return new clazz(`${this.champion.boneNames[boneName]}.${property}`, times, values);
     }
 
