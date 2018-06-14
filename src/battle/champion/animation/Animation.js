@@ -1,10 +1,17 @@
 import * as THREE from 'three';
 import _ from 'lodash';
 
+export const STEP = 1 / 30;
+export const SKIP = 2;
+
 export default class Animation {
     constructor(champion) {
         console.log('champion', champion);
         this.champion = champion;
+    }
+
+    static generateTimes(duration, step) {
+        return _.range(0, duration, step);
     }
 
     get key() {
@@ -13,6 +20,14 @@ export default class Animation {
 
     get duration() {
         return undefined;
+    }
+
+    get skip() {
+        return SKIP;
+    }
+
+    get times() {
+        return Animation.generateTimes(this.duration, STEP * this.skip);
     }
 
     bodyParam(name) {
@@ -42,6 +57,9 @@ export default class Animation {
     createTrack(clazz, property, boneName, times, values) {
         if (!this.champion.hasBone(boneName)) {
             return null;
+        }
+        if (_.isNil(times)) {
+            times = this.times;
         }
         return new clazz(`${this.champion.boneNames[boneName]}.${property}`, times, values);
     }

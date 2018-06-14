@@ -2,11 +2,22 @@ import _ from 'lodash';
 import ColladaLoader from '../../../loader/ColladaLoader';
 import {getAnimationByKey} from "./AnimationHelper";
 import {prepareAssetUrl} from "../ChampionHelper";
+import CreateAutoAnimation from "./CreateAutoAnimation";
 
 export default class ChampionAnimationManager {
     constructor(champion) {
         this.champion = champion;
-        this.animations = ['idle', 'walk'];
+        this.animations = [
+            'idle',
+            'walk',
+            'run',
+            'turnLeft',
+            'turnRight',
+            'walkBack',
+            'walkLeft',
+            'walkRight',
+            'danceSamba'
+        ];
         this.actions = {};
         this.actionsOptions = {
             // turnLeft: {timeScale: 2},
@@ -27,7 +38,10 @@ export default class ChampionAnimationManager {
             });
         });
         Promise.all(animationPromises).then((animationObjects) => {
-            animationObjects.forEach(animationObject => this.initAction(animationObject));
+            animationObjects.forEach(animationObject => {
+                new CreateAutoAnimation(animationObject).log();
+                this.initAction(animationObject);
+            });
             resolve(this.champion);
         })
     };
