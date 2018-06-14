@@ -2,7 +2,7 @@ import _ from 'lodash';
 import ColladaLoader from '../../../loader/ColladaLoader';
 import {getAnimationByKey} from "./AnimationHelper";
 import {prepareAssetUrl} from "../ChampionHelper";
-import CreateAutoAnimation from "./CreateAutoAnimation";
+import CreateAutoAnimation from "./auto/CreateAutoAnimation";
 
 export default class ChampionAnimationManager {
     constructor(champion) {
@@ -28,11 +28,28 @@ export default class ChampionAnimationManager {
         this.finishedAnimationListeners = [];
     }
 
+    loadOrCreateAnimations = (resolve) => {
+        const animationPromises = _.map(this.animations, (key) => {
+            return new Promise((resolve, reject) => {
+                new ColladaLoader().load(prepareAssetUrl(this.champion.id, key), (animationObject) => {
+                    resolve({key, animation: animationObject.animations[0]});
+                }, _.noop, () => {
+                    resolve(this.createAnimation(key));
+                });
+            });
+        });
+        Promise.all(animationPromises).then((animationObjects) => {
+            animationObjects.forEach(animationObject => {
+                this.initAction(animationObject);
+            });
+            resolve(this.champion);
+        })
+    };
+
     loadAnimations = (resolve) => {
         const animationPromises = _.map(this.animations, (key) => {
             return new Promise((resolve, reject) => {
                 new ColladaLoader().load(prepareAssetUrl(this.champion.id, key), (animationObject) => {
-                    console.log('animationObject', animationObject);
                     resolve({key, animation: animationObject.animations[0]});
                 });
             });
@@ -47,15 +64,17 @@ export default class ChampionAnimationManager {
     };
 
     createAnimations = (resolve) => {
-        this.animations.map(key => {
-            const animationClass = getAnimationByKey(key);
-            const animation = new animationClass(this.champion).create();
-            return {key, animation};
-        }).forEach(animationObject => {
-            this.initAction(animationObject);
+        this.animations.forEach(key => {
+            this.initAction(this.createAnimation(key));
         });
         resolve(this.champion);
     };
+
+    createAnimation(key) {
+        const animationClass = getAnimationByKey(key);
+        const animation = new animationClass(this.champion).create();
+        return {key, animation};
+    }
 
     initAction(animationObject) {
         const action = this.champion.mesh.mixer.clipAction(animationObject.animation);

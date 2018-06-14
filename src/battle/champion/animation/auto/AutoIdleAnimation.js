@@ -1,6 +1,6 @@
 
-import Animation from "./Animation";
-import * as bones from "../ChampionHelper";
+import Animation from "../Animation";
+import * as bones from "../../ChampionHelper";
 
 export default class AutoIdleAnimation extends Animation {
     constructor(champion) {

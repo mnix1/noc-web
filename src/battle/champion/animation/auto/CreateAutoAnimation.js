@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import Animation, {SKIP, STEP} from "./Animation";
+import Animation, {SKIP, STEP} from "../Animation";
 
 export default class CreateAutoAnimation {
     constructor(animationObject, precision = 6) {

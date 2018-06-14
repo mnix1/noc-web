@@ -1,12 +1,12 @@
-import AutoIdleAnimation from "./AutoIdleAnimation";
-import AutoWalkAnimation from "./AutoWalkAnimation";
-import AutoRunAnimation from "./AutoRunAnimation";
-import AutoDanceSambaAnimation from "./AutoDanceSambaAnimation";
-import AutoWalkRightAnimation from "./AutoWalkRightAnimation";
-import AutoWalkLeftAnimation from "./AutoWalkLeftAnimation";
-import AutoWalkBackAnimation from "./AutoWalkBackAnimation";
-import AutoTurnRightAnimation from "./AutoTurnRightAnimation";
-import AutoTurnLeftAnimation from "./AutoTurnLeftAnimation";
+import AutoIdleAnimation from "./auto/AutoIdleAnimation";
+import AutoWalkAnimation from "./auto/AutoWalkAnimation";
+import AutoRunAnimation from "./auto/AutoRunAnimation";
+import AutoDanceSambaAnimation from "./auto/AutoDanceSambaAnimation";
+import AutoWalkRightAnimation from "./auto/AutoWalkRightAnimation";
+import AutoWalkLeftAnimation from "./auto/AutoWalkLeftAnimation";
+import AutoWalkBackAnimation from "./auto/AutoWalkBackAnimation";
+import AutoTurnRightAnimation from "./auto/AutoTurnRightAnimation";
+import AutoTurnLeftAnimation from "./auto/AutoTurnLeftAnimation";
 
 const animationMapping = {
     idle: AutoIdleAnimation,
