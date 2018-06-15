@@ -6,13 +6,17 @@ export const MOVE_RIGHT = 'mr';
 export const SPRINT = 's';
 export const DANCE = 'd';
 export const ATTACK = 'a';
+export const PUNCH = 'p';
+export const JUMP = 'j';
 
-// export const JUMP = 'j';
 const actions = [
     IDLE,
     MOVE_FORWARD, MOVE_BACKWARD, MOVE_LEFT, MOVE_RIGHT,
     SPRINT,
-    DANCE, ATTACK
+    DANCE,
+
+    PUNCH,
+    JUMP
 ];
 
 

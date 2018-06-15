@@ -1,4 +1,4 @@
-import {ATTACK, DANCE, MOVE_BACKWARD, MOVE_FORWARD, MOVE_LEFT, MOVE_RIGHT, SPRINT} from "./Action";
+import {ATTACK, DANCE, JUMP, MOVE_BACKWARD, MOVE_FORWARD, MOVE_LEFT, MOVE_RIGHT, PUNCH, SPRINT} from "./Action";
 
 export class ControlListeners {
 
@@ -34,7 +34,7 @@ export class ControlListeners {
         if (this.initPointerLock()) {
             return;
         }
-        // this.action.change(ATTACK, true);
+        this.action.change(PUNCH, true);
     };
 
     initPointerLock() {
@@ -89,6 +89,9 @@ export class ControlListeners {
             case 66: /*B*/
                 this.action.change(DANCE, true);
                 break;
+            case 32: /*SPACE*/
+                this.action.change(JUMP, true);
+                break;
             default:
                 return;
         }
@@ -117,6 +120,9 @@ export class ControlListeners {
                 break;
             case 66: /*B*/
                 this.action.change(DANCE, false);
+                break;
+            case 32: /*B*/
+                this.action.change(JUMP, false);
                 break;
             default:
                 return;

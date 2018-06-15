@@ -14,8 +14,8 @@ export default class CreateAutoAnimation {
 
     classString() {
         return `
-        import Animation from "./Animation";
-        import * as bones from "../ChampionHelper";
+        import Animation from "../Animation";
+        import * as bones from "../../ChampionHelper";
         
         export default class AutoXAnimation extends Animation {
             constructor(champion) {

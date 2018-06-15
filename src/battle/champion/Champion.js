@@ -23,8 +23,8 @@ export default class Champion {
     }
 
     init() {
-        return this.loadBase(this.animationManager.loadOrCreateAnimations);
-        // return this.loadBase(this.animationManager.createAnimations);
+        // return this.loadBase(this.animationManager.loadOrCreateAnimations);
+        return this.loadBase(this.animationManager.createAnimations);
         // return this.loadBase(this.animationManager.loadAnimations);
     }
 

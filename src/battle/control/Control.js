@@ -1,13 +1,14 @@
 import * as THREE from 'three';
 import {ControlListeners} from "./ControlListeners";
-import {Action, ATTACK, DANCE, MOVE_BACKWARD, MOVE_FORWARD, MOVE_LEFT, MOVE_RIGHT, SPRINT} from "./Action";
+import {Action, ATTACK, DANCE, JUMP, MOVE_BACKWARD, MOVE_FORWARD, MOVE_LEFT, MOVE_RIGHT, PUNCH, SPRINT} from "./Action";
+import {HEAD_BONE} from "../champion/ChampionHelper";
 
 export class Control {
 
     constructor(champion, domElement, startPosition) {
         this.champion = champion;
         this.body = champion.mesh;
-        this.head = champion.bones.head;
+        this.head = champion.bones[HEAD_BONE];
         this.box = new THREE.Box3().setFromObject(this.body);
         this.target = new THREE.Vector3(0, 0, 0);
         this.headTarget = new THREE.Vector3(0, 0, 0);
@@ -28,7 +29,7 @@ export class Control {
         this.controlListeners = new ControlListeners(domElement, this.action, this.pointer);
         this.changeListeners = [];
 
-        // this.champion.addAnimationFinishedListener(this.handleChampionAnimationFinished);
+        this.champion.animationManager.addAnimationFinishedListener(this.handleChampionAnimationFinished);
     }
 
     handleActionChanged = () => {
@@ -49,8 +50,12 @@ export class Control {
             newAnimation = 'dance';
         } else if (this.action[ATTACK]) {
             newAnimation = 'attack';
+        } else if (this.action[JUMP]) {
+            newAnimation = 'jump';
+        } else if (this.action[PUNCH]) {
+            newAnimation = 'punch';
         }
-        // this.champion.playNextAnimation(undefined, newAnimation);
+        this.champion.animationManager.playNextAnimation(undefined, newAnimation);
         // this.champion.stopAllAndPlayAnimation(newAnimation);
     };
 
@@ -65,7 +70,7 @@ export class Control {
     update(delta) {
         const moveForwardSpeed = delta * (this.action[SPRINT] ? this.sprintSpeed : this.walkSpeed);
         const moveOtherSpeed = delta * this.walkSpeed;
-        if (this.action[MOVE_FORWARD] && !this.action[MOVE_BACKWARD]) this.body.translateZ((moveForwardSpeed));
+        if (this.action[MOVE_FORWARD] && !this.action[MOVE_BACKWARD]) this.body.translateZ(moveForwardSpeed);
         if (this.action[MOVE_BACKWARD] && !this.action[MOVE_FORWARD]) this.body.translateZ(-moveOtherSpeed);
         if (this.action[MOVE_LEFT] && !this.action[MOVE_RIGHT]) this.body.translateX(moveOtherSpeed);
         if (this.action[MOVE_RIGHT] && !this.action[MOVE_LEFT]) this.body.translateX(-moveOtherSpeed);
@@ -90,15 +95,15 @@ export class Control {
         const maxAngle = Math.PI / 3 + Math.PI / 6;
         if (Math.abs(this.bodyUpdatedHorizontalAngle - this.horizontalAngle) > maxAngle) {
             if (this.bodyUpdatedHorizontalAngle > this.horizontalAngle) {
-                // this.champion.playNextAnimation(undefined, 'turnLeft');
+                this.champion.animationManager.playNextAnimation(undefined, 'turnLeft');
             } else {
-                // this.champion.playNextAnimation(undefined, 'turnRight');
+                this.champion.animationManager.playNextAnimation(undefined, 'turnRight');
             }
             this.bodyUpdatedHorizontalAngle = this.horizontalAngle;
         } else {
             this.headTarget.x = bodyPosition.x + this.targetDistance * Math.sin(this.bodyUpdatedHorizontalAngle - this.horizontalAngle);
             this.headTarget.z = bodyPosition.z + this.targetDistance * Math.cos(this.horizontalAngle - this.bodyUpdatedHorizontalAngle);
-            // this.head.lookAt(this.headTarget);
+            this.head.lookAt(this.headTarget);
         }
     }
 
@@ -109,13 +114,13 @@ export class Control {
         if (this.headTarget.x !== 0 || this.headTarget.z !== this.targetDistance) {
             this.headTarget.x = 0;
             this.headTarget.z = this.targetDistance;
-            // this.head.lookAt(this.headTarget);
+            this.head.lookAt(this.headTarget);
         }
     }
 
     handleChampionAnimationFinished = (props, champion) => {
         if (props.action === champion.actions.turnLeft || props.action === champion.actions.turnRight) {
-            this.champion.playNextAnimation(undefined, 'idle');
+            this.champion.animationManager.playNextAnimation(undefined, 'idle');
             this.updateBodyTarget(false);
         }
     };
