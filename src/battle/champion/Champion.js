@@ -20,6 +20,10 @@ export default class Champion {
         }, {});
         this.bones = {};
         this.animationManager = new ChampionAnimationManager(this);
+        this.stats = {
+            walkSpeed: 1.0,
+            runSpeed: 3.0
+        }
     }
 
     init() {

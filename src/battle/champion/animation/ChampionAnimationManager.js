@@ -10,14 +10,14 @@ export default class ChampionAnimationManager {
         this.animations = [
             'idle',
             'walk',
-            'jump',
-            'run',
-            'turnLeft',
-            'turnRight',
             'walkBack',
             'walkLeft',
             'walkRight',
+            'run',
+            'turnLeft',
+            'turnRight',
             'danceSamba',
+            'jump',
             'punch',
         ];
         this.actions = {};

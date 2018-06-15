@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import * as THREE from 'three';
 import Field from "./field/Field";
-import {Control} from "./control/Control";
+import {Control} from "./champion/control/Control";
 import {getChampionById} from "./champion/ChampionHelper";
 
 export default class BattleWorld {

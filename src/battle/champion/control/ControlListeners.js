@@ -1,10 +1,12 @@
-import {ATTACK, DANCE, JUMP, MOVE_BACKWARD, MOVE_FORWARD, MOVE_LEFT, MOVE_RIGHT, PUNCH, SPRINT} from "./Action";
+import {DANCE, MOVE_BACKWARD, MOVE_FORWARD, MOVE_LEFT, MOVE_RIGHT, SPRINT} from "./ContinuousAction";
+import {JUMP, PUNCH} from "./DiscreetAction";
 
 export class ControlListeners {
 
-    constructor(domElement, action, pointer) {
+    constructor(domElement, continuousAction, discreetAction, pointer) {
         this.domElement = domElement;
-        this.action = action;
+        this.continuousAction = continuousAction;
+        this.discreetAction = discreetAction;
         this.pointer = pointer;
         this.initListeners();
     }
@@ -34,7 +36,7 @@ export class ControlListeners {
         if (this.initPointerLock()) {
             return;
         }
-        this.action.change(PUNCH, true);
+        this.discreetAction.start(PUNCH);
     };
 
     initPointerLock() {
@@ -69,28 +71,28 @@ export class ControlListeners {
         switch (event.keyCode) {
             case 38: /*up*/
             case 87: /*W*/
-                this.action.change(MOVE_FORWARD, true);
+                this.continuousAction.change(MOVE_FORWARD, true);
                 break;
             case 37: /*left*/
             case 65: /*A*/
-                this.action.change(MOVE_LEFT, true);
+                this.continuousAction.change(MOVE_LEFT, true);
                 break;
             case 40: /*down*/
             case 83: /*S*/
-                this.action.change(MOVE_BACKWARD, true);
+                this.continuousAction.change(MOVE_BACKWARD, true);
                 break;
             case 39: /*right*/
             case 68: /*D*/
-                this.action.change(MOVE_RIGHT, true);
+                this.continuousAction.change(MOVE_RIGHT, true);
                 break;
             case 16: /*SHIFT*/
-                this.action.change(SPRINT, true);
+                this.continuousAction.change(SPRINT, true);
                 break;
             case 66: /*B*/
-                this.action.change(DANCE, true);
+                this.continuousAction.change(DANCE, true);
                 break;
             case 32: /*SPACE*/
-                this.action.change(JUMP, true);
+                this.discreetAction.start(JUMP);
                 break;
             default:
                 return;
@@ -101,28 +103,25 @@ export class ControlListeners {
         switch (event.keyCode) {
             case 38: /*up*/
             case 87: /*W*/
-                this.action.change(MOVE_FORWARD, false);
+                this.continuousAction.change(MOVE_FORWARD, false);
                 break;
             case 37: /*left*/
             case 65: /*A*/
-                this.action.change(MOVE_LEFT, false);
+                this.continuousAction.change(MOVE_LEFT, false);
                 break;
             case 40: /*down*/
             case 83: /*S*/
-                this.action.change(MOVE_BACKWARD, false);
+                this.continuousAction.change(MOVE_BACKWARD, false);
                 break;
             case 39: /*right*/
             case 68: /*D*/
-                this.action.change(MOVE_RIGHT, false);
+                this.continuousAction.change(MOVE_RIGHT, false);
                 break;
             case 16: /*SHIFT*/
-                this.action.change(SPRINT, false);
+                this.continuousAction.change(SPRINT, false);
                 break;
             case 66: /*B*/
-                this.action.change(DANCE, false);
-                break;
-            case 32: /*B*/
-                this.action.change(JUMP, false);
+                this.continuousAction.change(DANCE, false);
                 break;
             default:
                 return;
